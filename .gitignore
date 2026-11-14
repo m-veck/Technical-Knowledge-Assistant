@@ -1,0 +1,37 @@
+# Personal notes (Obsidian vault): my own working log and personal notes
+# while doing this assignment. Kept local on purpose, not part of the solution.
+Human/
+
+# Working notes and drafts. Things that become concrete move to Docs/.
+Work/
+
+# Secrets: API keys live in .env, never in the repo (.env.example is the template)
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.ipynb_checkpoints/
+
+# Data and indexes: downloaded or generated, too large for git (GitHub limit is 100 MB per file)
+data/
+*.parquet
+*.db
+*.sqlite
+*.sqlite3
+*.faiss
+*.npy
+
+# Editors and OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
