@@ -40,6 +40,32 @@ def create_tables(conn: sqlite3.Connection) -> None:
     """)
 
 
+def indexed_ids(conn: sqlite3.Connection) -> set[str]:
+    """The corpus _ids that are already in the database."""
+    return {row[0] for row in conn.execute("SELECT id FROM documents")}
+
+
+def store_units(conn: sqlite3.Connection, units: list[dict], vectors: list[list[float]]) -> None:
+    """Write each unit to the three tables under one rowid, then commit (so a crash loses one batch at most)."""
+    for unit, vector in zip(units, vectors):
+        cursor = conn.execute(
+            "INSERT INTO documents (id, text, url, start_byte, end_byte) VALUES (?, ?, ?, ?, ?)",
+            (unit["id"], unit["text"], unit["url"], unit["start_byte"], unit["end_byte"]),
+        )
+        rowid = cursor.lastrowid
+        conn.execute("INSERT INTO documents_fts (rowid, text) VALUES (?, ?)", (rowid, unit["text"]))
+        conn.execute(
+            "INSERT INTO documents_vec (rowid, embedding) VALUES (?, ?)",
+            (rowid, sqlite_vec.serialize_float32(vector)),
+        )
+    conn.commit()
+
+
+def delete_database() -> None:
+    """Delete the database file, including all stored embeddings."""
+    config.DB_PATH.unlink(missing_ok=True)
+
+
 def setup_database() -> None:
     """Create the database file and its tables, then report how many documents it holds."""
     conn = connect()

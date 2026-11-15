@@ -2,8 +2,13 @@
 
 from pathlib import Path
 
+from dotenv import load_dotenv
+
 # Repo root: this file is src/tka/config.py, so two levels above the package folder
 ROOT = Path(__file__).resolve().parents[2]
+
+# API keys come from .env in the repo root (template: .env.example)
+load_dotenv(ROOT / ".env")
 
 # Downloaded datasets (staging area, gitignored)
 DATA_DIR = ROOT / "data"
@@ -13,7 +18,17 @@ QUERIES_DIR = RAW_DIR / "queries"  # evaluation only, never feeds the index
 
 # SQLite database: corpus rows, BM25 index (FTS5) and vectors (sqlite-vec) in one file
 DB_PATH = DATA_DIR / "tka.db"
+
+# Embeddings: Cohere Embed v5 (Pro and Fast share one vector space)
+EMBED_PROVIDER = "cohere"
+EMBED_MODEL = "embed-v5.0-pro"
 EMBEDDING_DIM = 2048  # Cohere Embed v5 default
+EMBED_BATCH_SIZE = 96  # Cohere's maximum number of texts per call
+EMBED_PRICE_PER_MILLION = 0.12  # USD per 1M input tokens, only for the cost line after indexing
+
+# Base64 blobs (mostly images in notebook outputs) are replaced before indexing
+BASE64_MIN_LENGTH = 200
+BASE64_PLACEHOLDER = "[image data removed]"
 
 # Evaluation outputs
 RESULTS_DIR = ROOT / "results"
