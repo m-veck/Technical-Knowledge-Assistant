@@ -9,7 +9,7 @@ The assignment is in [Docs/assignment.md](Docs/assignment.md).
 Requires Python 3.13 and [uv](https://docs.astral.sh/uv/).
 
 ```
-git clone https://github.com/m-veck/Technical-Knowledge-Assistant>
+git clone https://github.com/m-veck/Technical-Knowledge-Assistant
 cd Technical-Knowledge-Assistant
 uv sync
 cp .env.example .env
