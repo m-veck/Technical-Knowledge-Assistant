@@ -11,6 +11,10 @@ RAW_DIR = DATA_DIR / "raw"
 CORPUS_DIR = RAW_DIR / "corpus"
 QUERIES_DIR = RAW_DIR / "queries"  # evaluation only, never feeds the index
 
+# SQLite database: corpus rows, BM25 index (FTS5) and vectors (sqlite-vec) in one file
+DB_PATH = DATA_DIR / "tka.db"
+EMBEDDING_DIM = 2048  # Cohere Embed v5 default
+
 # Evaluation outputs
 RESULTS_DIR = ROOT / "results"
 

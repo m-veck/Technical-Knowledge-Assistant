@@ -22,3 +22,4 @@ Then put the given Anthropic and Cohere API keys in `.env`.
 | Command | What it does |
 |---|---|
 | `uv run tka download` | Download the LangChain corpus and queries into `data/raw/` |
+| `uv run tka setup` | Create the SQLite database and its tables in `data/` (safe to rerun) |

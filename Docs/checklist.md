@@ -38,7 +38,7 @@ What the final solution needs. The "Required" part comes straight from [assignme
 Not literally in the assignment, but my own
 
 - [ ] Plain hybrid baseline first (BM25 + embeddings, merged with reciprocal rank fusion), measured before adding anything else
-- [ ] Large rows split further; every sub-chunk keeps its parent `_id`; cite and evaluate on the parent, each parent cited once
+- [ ] Flat index: one embedding per corpus row (no extra chunking); every row fits whole in Cohere Embed
 - [ ] "Not enough information" base layers: retrieval cutoff before the LLM, system prompt rule, citation check after the answer
 - [ ] Dev/test split is reproducible (fixed seed, split saved in the repo); test part is not used for tuning
 - [ ] Small hand-written set of out-of-scope questions to test the "I don't know" behaviour (the official set has almost none)
@@ -60,6 +60,8 @@ Not literally in the assignment, but my own
 - [ ] Support score with a tunable threshold and a retry loop
 - [ ] Overseer for evaluation (a slow, thorough LLM that fact-checks the outputs on a subset)
 - [ ] Language and version handling: tag chunks with language, repo, package and doc type (docs, code, notebook, test), read from the metadata (`_id` path and `url`) during chunking; soft boost for the question's language
+- [ ] Smart chunking compared against the flat index: split rows on headings and code boundaries, every sub-chunk keeps its parent `_id`, cite and evaluate on the parent, each parent cited once
+- [ ] Document context in each chunk, compared against the baseline: Voyage context-4 (own chunks grouped per document) or Anthropic-style contextual retrieval (an LLM writes a context line per chunk)
 - [ ] Chunk enrichment (keywords, generated questions, context summary), compared against the baseline
 - [ ] MCP server on top of the same search, so an existing agent can use it
 - [ ] Local option: local embedding model with a SQLite index
