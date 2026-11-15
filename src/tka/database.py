@@ -45,13 +45,18 @@ def indexed_ids(conn: sqlite3.Connection) -> set[str]:
     return {row[0] for row in conn.execute("SELECT id FROM documents")}
 
 
-def store_units(conn: sqlite3.Connection, units: list[dict], vectors: list[list[float]]) -> None:
-    """Write each unit to the three tables under one rowid, then commit (so a crash loses one batch at most)."""
+def store_units(conn: sqlite3.Connection, units: list[dict], vectors: list[list[float] | None]) -> None:
+    """Write each unit to the three tables under one rowid, then commit (so a crash loses one batch at most).
+
+    A unit whose vector is None only goes into documents: stored and citeable, but not searchable.
+    """
     for unit, vector in zip(units, vectors):
         cursor = conn.execute(
             "INSERT INTO documents (id, text, url, start_byte, end_byte) VALUES (?, ?, ?, ?, ?)",
             (unit["id"], unit["text"], unit["url"], unit["start_byte"], unit["end_byte"]),
         )
+        if vector is None:
+            continue
         rowid = cursor.lastrowid
         conn.execute("INSERT INTO documents_fts (rowid, text) VALUES (?, ?)", (rowid, unit["text"]))
         conn.execute(

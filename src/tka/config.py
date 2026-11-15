@@ -26,9 +26,9 @@ EMBEDDING_DIM = 2048  # Cohere Embed v5 default
 EMBED_BATCH_SIZE = 96  # Cohere's maximum number of texts per call
 EMBED_PRICE_PER_MILLION = 0.12  # USD per 1M input tokens, only for the cost line after indexing
 
-# Base64 blobs (mostly images in notebook outputs) are replaced before indexing
+# Base64 blobs (images in notebook outputs, .zlib files) are replaced before indexing
 BASE64_MIN_LENGTH = 200
-BASE64_PLACEHOLDER = "[image data removed]"
+BASE64_PLACEHOLDER = "[base64 removed]"
 
 # Evaluation outputs
 RESULTS_DIR = ROOT / "results"
