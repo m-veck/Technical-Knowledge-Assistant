@@ -15,7 +15,7 @@ uv sync
 cp .env.example .env
 ```
 
-Then put the given OpenAI API key in `.env`.
+Then put the given Anthropic and Cohere API keys in `.env`.
 
 ## Commands
 

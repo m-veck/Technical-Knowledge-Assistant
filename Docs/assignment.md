@@ -18,7 +18,7 @@ Use the LangChain subset of the FreshStack October 2024 snapshot. It consists of
 
 Documentation and source code from GitHub repositories, split into small chunks, each with a document ID. This is the only material the assistant may search.
 
-- **Queries (evaluation data):** freshstacko/queries-oct-2024 (subset: langchain)
+- **Queries (evaluation data):** [freshstacko/queries-oct-2024](https://huggingface.co/datasets/freshstack/queries-oct-2024) (subset: langchain)
 
 Real LangChain questions from Stack Overflow, each with a reference answer, nuggets (key facts a good answer should contain), and relevance judgments that link each question to the relevant corpus chunks. Use these only to evaluate your solution, never as input to the assistant.
 
