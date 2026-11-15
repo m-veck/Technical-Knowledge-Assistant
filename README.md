@@ -21,4 +21,4 @@ Then put the given OpenAI API key in `.env`.
 
 | Command | What it does |
 |---|---|
-| `uv run tka download` | Download the LangChain corpus and queries into `data/raw/` (not built yet) |
+| `uv run tka download` | Download the LangChain corpus and queries into `data/raw/` |

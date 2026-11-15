@@ -2,6 +2,8 @@
 
 import typer
 
+from tka.download import download_data
+
 app = typer.Typer(no_args_is_help=True)
 
 
@@ -13,4 +15,4 @@ def main() -> None:
 @app.command()
 def download() -> None:
     """Download the LangChain corpus and queries into data/raw/."""
-    typer.echo("Not built yet.")
+    download_data()
