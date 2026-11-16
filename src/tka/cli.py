@@ -1,5 +1,6 @@
 """The `tka` command. Each subcommand is a thin wrapper around a module in this package."""
 
+from enum import Enum
 from typing import Annotated
 
 import typer
@@ -8,9 +9,18 @@ from tka import config
 from tka.database import delete_database, setup_database
 from tka.download import download_data
 from tka.ingest import build_index
+from tka.retrieval import show_search
 from tka.split import make_split
 
 app = typer.Typer(no_args_is_help=True)
+
+
+class Mode(str, Enum):
+    """The three ways to search, shown as choices in --help."""
+
+    keyword = "keyword"
+    semantic = "semantic"
+    hybrid = "hybrid"
 
 
 @app.callback()
@@ -50,3 +60,13 @@ def index(
 def split() -> None:
     """Split the queries once into dev (tuning) and test (final run); writes splits/split.json."""
     make_split()
+
+
+@app.command()
+def search(
+    question: str,
+    mode: Annotated[Mode, typer.Option(help="keyword (BM25), semantic (vectors) or hybrid (both, fused).")] = Mode.hybrid,
+    k: Annotated[int, typer.Option(help="How many results to show.")] = config.SEARCH_TOP_K,
+) -> None:
+    """Search the index and show the top results (no answer yet, just the retrieved documents)."""
+    show_search(question, mode.value, k)

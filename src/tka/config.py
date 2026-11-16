@@ -26,6 +26,14 @@ EMBEDDING_DIM = 2048  # Cohere Embed v5 default
 EMBED_BATCH_SIZE = 96  # Cohere's maximum number of texts per call
 EMBED_PRICE_PER_MILLION = 0.12  # USD per 1M input tokens, only for the cost line after indexing
 
+# Search: question model and the tunable settings (tune on dev only)
+QUERY_EMBED_MODEL = "embed-v5.0-pro"  # same model as the index
+SEARCH_CANDIDATES = 50  # results each retriever delivers before fusion
+SEARCH_TOP_K = 10  # results after fusion
+RRF_K = 60  # reciprocal rank fusion constant: higher means top ranks count less heavily
+WEIGHT_KEYWORD = 1.0  # weight of the BM25 list in the fusion
+WEIGHT_SEMANTIC = 1.0  # weight of the vector list in the fusion
+
 # Base64 blobs (images in notebook outputs, .zlib files) are replaced before indexing
 BASE64_MIN_LENGTH = 200
 BASE64_PLACEHOLDER = "[base64 removed]"
