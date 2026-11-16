@@ -4,11 +4,19 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
+# =======================================================
+# General: repo root and API keys
+# =======================================================
+
 # Repo root: this file is src/tka/config.py, so two levels above the package folder
 ROOT = Path(__file__).resolve().parents[2]
 
 # API keys come from .env in the repo root (template: .env.example)
 load_dotenv(ROOT / ".env")
+
+# =======================================================
+# Download: the Hugging Face datasets and where they land
+# =======================================================
 
 # Downloaded datasets (staging area, gitignored)
 DATA_DIR = ROOT / "data"
@@ -16,37 +24,7 @@ RAW_DIR = DATA_DIR / "raw"
 CORPUS_DIR = RAW_DIR / "corpus"
 QUERIES_DIR = RAW_DIR / "queries"  # evaluation only, never feeds the index
 
-# SQLite database: corpus rows, BM25 index (FTS5) and vectors (sqlite-vec) in one file
-DB_PATH = DATA_DIR / "tka.db"
-
-# Embeddings: Cohere Embed v5 (Pro and Fast share one vector space)
-EMBED_PROVIDER = "cohere"
-EMBED_MODEL = "embed-v5.0-pro"
-EMBEDDING_DIM = 2048  # Cohere Embed v5 default
-EMBED_BATCH_SIZE = 96  # Cohere's maximum number of texts per call
-EMBED_PRICE_PER_MILLION = 0.12  # USD per 1M input tokens, only for the cost line after indexing
-
-# Search: question model and the tunable settings (tune on dev only)
-QUERY_EMBED_MODEL = "embed-v5.0-pro"  # same model as the index
-SEARCH_CANDIDATES = 50  # results each retriever delivers before fusion
-SEARCH_TOP_K = 10  # results after fusion
-RRF_K = 60  # reciprocal rank fusion constant: higher means top ranks count less heavily
-WEIGHT_KEYWORD = 1.0  # weight of the BM25 list in the fusion
-WEIGHT_SEMANTIC = 1.0  # weight of the vector list in the fusion
-
-# Base64 blobs (images in notebook outputs, .zlib files) are replaced before indexing
-BASE64_MIN_LENGTH = 200
-BASE64_PLACEHOLDER = "[base64 removed]"
-
-# Dev/test split of the queries: made once, committed so reviewers see what we tuned and tested on
-SPLIT_PATH = ROOT / "splits" / "split.json"
-SPLIT_SEED = 42
-SPLIT_DEV_SIZE = 68  # 1/3 dev for tuning, the other 135 are the test part, run once at the end
-
-# Evaluation outputs
-RESULTS_DIR = ROOT / "results"
-
-# Hugging Face datasetes
+# Hugging Face datasets
 CORPUS_DATASET = "freshstack/corpus-oct-2024"
 QUERIES_DATASET = "freshstack/queries-oct-2024"
 SUBSET = "langchain"
@@ -64,3 +42,62 @@ QUERIES_FILE = f"{SUBSET}/{QUERIES_SPLIT}-00000-of-00001.parquet"
 # Row counts for the check after download
 CORPUS_ROWS = 49_514
 QUERIES_ROWS = 203
+
+# =======================================================
+# Setup: the SQLite database
+# =======================================================
+
+# SQLite database: corpus rows, BM25 index (FTS5) and vectors (sqlite-vec) in one file
+DB_PATH = DATA_DIR / "tka.db"
+
+# =======================================================
+# Index: cleaning the rows and embedding them
+# =======================================================
+
+# Base64 blobs (images in notebook outputs, .zlib files) are replaced before indexing
+BASE64_MIN_LENGTH = 200
+BASE64_PLACEHOLDER = "[base64 removed]"
+
+# Embeddings: Cohere Embed v5 (Pro and Fast share one vector space)
+EMBED_PROVIDER = "cohere"
+EMBED_MODEL = "embed-v5.0-pro"
+EMBEDDING_DIM = 2048  # Cohere Embed v5 default
+EMBED_BATCH_SIZE = 96  # Cohere's maximum number of texts per call
+EMBED_PRICE_PER_MILLION = 0.12  # USD per 1M input tokens, only for the cost line after indexing
+
+# =======================================================
+# Search: question model and the tunable settings (tune on dev only)
+# =======================================================
+
+QUERY_EMBED_MODEL = "embed-v5.0-pro"  # same model as the index
+SEARCH_TOP_K = 10  # results after fusion
+
+# Hybrid search: score fusion, tuned on the dev questions (2026-11-16)
+SEMANTIC_CANDIDATES = 200  # results the semantic search delivers to the fusion
+KEYWORD_CANDIDATES = 50  # results the keyword search delivers to the fusion
+WEIGHT_SEMANTIC = 0.7  # share of the semantic score in the fused score; keyword gets the rest (0.3)
+
+# =======================================================
+# Split: dev and test part of the evaluation questions
+# =======================================================
+
+# Made once, committed so reviewers see what we tuned and tested on
+SPLIT_PATH = ROOT / "splits" / "split.json"
+SPLIT_SEED = 42
+SPLIT_DEV_SIZE = 68  # 1/3 dev for tuning, the other 135 are the test part, run once at the end
+
+# =======================================================
+# Evaluation metrics and their names in the output JSON
+# =======================================================
+
+# Evaluation outputs
+RESULTS_DIR = ROOT / "results"
+
+# The embeddings of the questions, saved so a rerun of the evaluation does not embed them again
+QUESTION_CACHE_PATH = ROOT / "splits" / "question_cache.json"
+
+# Retrieval metrics, same depths and alpha as the FreshStack leaderboard
+EVAL_RECALL_K = 50  # also how many results are fetched per question
+EVAL_COVERAGE_K = 20
+EVAL_NDCG_K = 10
+EVAL_ALPHA = 0.5  # how much a repeat of an already covered nugget is discounted

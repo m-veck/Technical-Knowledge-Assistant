@@ -1,4 +1,4 @@
-"""Search the index three ways: keyword (BM25), semantic (vectors) and hybrid (both, fused with RRF).
+"""Search the index three ways: keyword (BM25), semantic (vectors) and hybrid (both, fused on their scores).
 
 Every search function returns a list of (doc_id, score) pairs, best first.
 """
@@ -32,34 +32,53 @@ def search_keyword(conn: sqlite3.Connection, question: str, k: int) -> list[tupl
     ).fetchall()
 
 
-def search_semantic(conn: sqlite3.Connection, question: str, k: int) -> list[tuple[str, float]]:
-    """The k vectors closest to the question. The score is cosine similarity (1 - cosine distance)."""
-    vector = sqlite_vec.serialize_float32(embed_query(question))
+def search_semantic(conn: sqlite3.Connection, question: str, k: int, vector: list[float] | None = None) -> list[tuple[str, float]]:
+    """The k vectors closest to the question. The score is cosine similarity (1 - cosine distance).
+
+    Embeds the question, unless the caller already has its vector (the evaluation keeps them in a file).
+    """
+    # Vector cache
+    if vector is None:
+        vector = embed_query(question)
     return conn.execute(
         "SELECT d.id, 1 - v.distance FROM documents_vec v JOIN documents d ON d.rowid = v.rowid "
         "WHERE v.embedding MATCH ? AND k = ? ORDER BY v.distance",
-        (vector, k),
+        (sqlite_vec.serialize_float32(vector), k),
     ).fetchall()
 
 
-def search_hybrid(conn: sqlite3.Connection, question: str, k: int) -> list[tuple[str, float]]:
-    """Both searches, fused with reciprocal rank fusion: each list adds weight / (RRF_K + rank) to a document."""
-    scores: dict[str, float] = {}
-    for results, weight in (
-        (search_keyword(conn, question, config.SEARCH_CANDIDATES), config.WEIGHT_KEYWORD),
-        (search_semantic(conn, question, config.SEARCH_CANDIDATES), config.WEIGHT_SEMANTIC),
-    ):
-        for rank, (doc_id, _score) in enumerate(results, start=1):
-            scores[doc_id] = scores.get(doc_id, 0.0) + weight / (config.RRF_K + rank)
+def scaled(results: list[tuple[str, float]]) -> dict[str, float]:
+    """The scores of one result list scaled to 0..1: its best document gets 1, its worst gets 0."""
+    if not results:
+        return {}
+    values = [score for _doc_id, score in results]
+    low, high = min(values), max(values)
+    return {doc_id: (score - low) / (high - low) if high > low else 1.0 for doc_id, score in results}
+
+
+def search_hybrid(conn: sqlite3.Connection, question: str, k: int, vector: list[float] | None = None) -> list[tuple[str, float]]:
+    """Both searches, fused on their scores: WEIGHT_SEMANTIC x semantic score + the rest x keyword score.
+
+    BM25 scores and cosine similarities are on different scales, so each list is first scaled to 0..1.
+    A document that is in only one of the two lists gets 0 from the other.
+    """
+    keyword = scaled(search_keyword(conn, question, config.KEYWORD_CANDIDATES))
+    semantic = scaled(search_semantic(conn, question, config.SEMANTIC_CANDIDATES, vector))  # vector: from the cache, if given
+    weight = config.WEIGHT_SEMANTIC
+    scores = {
+        doc_id: weight * semantic.get(doc_id, 0.0) + (1 - weight) * keyword.get(doc_id, 0.0)
+        for doc_id in sorted(keyword.keys() | semantic.keys())  # sorted, so equal scores always come out in the same order
+    }
     return sorted(scores.items(), key=lambda item: item[1], reverse=True)[:k]
 
 
-SEARCHES = {"keyword": search_keyword, "semantic": search_semantic, "hybrid": search_hybrid}
-
-
-def search(conn: sqlite3.Connection, question: str, mode: str = "hybrid", k: int = config.SEARCH_TOP_K):
-    """Run one of the three searches by name."""
-    return SEARCHES[mode](conn, question, k)
+def search(conn: sqlite3.Connection, question: str, mode: str = "hybrid", k: int = config.SEARCH_TOP_K, vector: list[float] | None = None):
+    """Run one of the three searches by name. `vector` is the question's embedding, if the caller already has it."""
+    if mode == "keyword":
+        return search_keyword(conn, question, k)
+    if mode == "semantic":
+        return search_semantic(conn, question, k, vector)
+    return search_hybrid(conn, question, k, vector)
 
 
 def show_search(question: str, mode: str, k: int) -> None:

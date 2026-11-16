@@ -1,0 +1,1187 @@
+{
+  "split": "dev",
+  "questions": 68,
+  "settings": {
+    "embed_model": "embed-v5.0-pro",
+    "query_embed_model": "embed-v5.0-pro",
+    "search_candidates": 50,
+    "rrf_k": 60,
+    "weight_keyword": 1.0,
+    "weight_semantic": 1.0
+  },
+  "averages": {
+    "keyword": {
+      "Recall@50": 0.2834,
+      "Coverage@20": 0.5167,
+      "alpha-nDCG@10": 0.2468
+    },
+    "semantic": {
+      "Recall@50": 0.5152,
+      "Coverage@20": 0.7282,
+      "alpha-nDCG@10": 0.4155
+    },
+    "hybrid": {
+      "Recall@50": 0.4777,
+      "Coverage@20": 0.7588,
+      "alpha-nDCG@10": 0.3902
+    }
+  },
+  "per_question": {
+    "76501723": {
+      "keyword": {
+        "Recall@50": 0.5714285714285714,
+        "Coverage@20": 0.6666666666666666,
+        "alpha-nDCG@10": 0.7014202329819483
+      },
+      "semantic": {
+        "Recall@50": 0.8571428571428571,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.9085054888727562
+      },
+      "hybrid": {
+        "Recall@50": 0.7142857142857143,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.8291720220076627
+      }
+    },
+    "75864073": {
+      "keyword": {
+        "Recall@50": 0.5,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.2992445134628622
+      },
+      "semantic": {
+        "Recall@50": 0.75,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.6181007964920189
+      },
+      "hybrid": {
+        "Recall@50": 0.625,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.7496785262785709
+      }
+    },
+    "75952371": {
+      "keyword": {
+        "Recall@50": 0.38461538461538464,
+        "Coverage@20": 0.6666666666666666,
+        "alpha-nDCG@10": 0.43633506032952
+      },
+      "semantic": {
+        "Recall@50": 0.38461538461538464,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.6908056581554951
+      },
+      "hybrid": {
+        "Recall@50": 0.5384615384615384,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.6438564695373016
+      }
+    },
+    "75979420": {
+      "keyword": {
+        "Recall@50": 0.4,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.34838870457088533
+      },
+      "semantic": {
+        "Recall@50": 0.2,
+        "Coverage@20": 0.0,
+        "alpha-nDCG@10": 0.0
+      },
+      "hybrid": {
+        "Recall@50": 0.4,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.15200008468015064
+      }
+    },
+    "76111075": {
+      "keyword": {
+        "Recall@50": 0.4666666666666667,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.7034935380903223
+      },
+      "semantic": {
+        "Recall@50": 0.6,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.5680228778211706
+      },
+      "hybrid": {
+        "Recall@50": 0.6,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.7426148052048546
+      }
+    },
+    "76184540": {
+      "keyword": {
+        "Recall@50": 0.0,
+        "Coverage@20": 0.0,
+        "alpha-nDCG@10": 0.0
+      },
+      "semantic": {
+        "Recall@50": 0.75,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.2636346667834006
+      },
+      "hybrid": {
+        "Recall@50": 0.5,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.0
+      }
+    },
+    "76185221": {
+      "keyword": {
+        "Recall@50": 0.2857142857142857,
+        "Coverage@20": 0.5,
+        "alpha-nDCG@10": 0.14760100982615612
+      },
+      "semantic": {
+        "Recall@50": 0.8571428571428571,
+        "Coverage@20": 0.5,
+        "alpha-nDCG@10": 0.5535037868480854
+      },
+      "hybrid": {
+        "Recall@50": 0.5714285714285714,
+        "Coverage@20": 0.5,
+        "alpha-nDCG@10": 0.390078363639162
+      }
+    },
+    "76240871": {
+      "keyword": {
+        "Recall@50": 0.25,
+        "Coverage@20": 0.75,
+        "alpha-nDCG@10": 0.0
+      },
+      "semantic": {
+        "Recall@50": 0.6666666666666666,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.7878985494098357
+      },
+      "hybrid": {
+        "Recall@50": 0.5833333333333334,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.5317553098123808
+      }
+    },
+    "76244938": {
+      "keyword": {
+        "Recall@50": 0.25,
+        "Coverage@20": 0.3333333333333333,
+        "alpha-nDCG@10": 0.1614847276573866
+      },
+      "semantic": {
+        "Recall@50": 0.5,
+        "Coverage@20": 0.3333333333333333,
+        "alpha-nDCG@10": 0.0
+      },
+      "hybrid": {
+        "Recall@50": 0.5,
+        "Coverage@20": 0.3333333333333333,
+        "alpha-nDCG@10": 0.09722349373300454
+      }
+    },
+    "76284412": {
+      "keyword": {
+        "Recall@50": 0.0,
+        "Coverage@20": 0.0,
+        "alpha-nDCG@10": 0.0
+      },
+      "semantic": {
+        "Recall@50": 0.5714285714285714,
+        "Coverage@20": 0.25,
+        "alpha-nDCG@10": 0.0
+      },
+      "hybrid": {
+        "Recall@50": 0.14285714285714285,
+        "Coverage@20": 0.0,
+        "alpha-nDCG@10": 0.0
+      }
+    },
+    "76288582": {
+      "keyword": {
+        "Recall@50": 0.0,
+        "Coverage@20": 0.0,
+        "alpha-nDCG@10": 0.0
+      },
+      "semantic": {
+        "Recall@50": 0.3333333333333333,
+        "Coverage@20": 0.3333333333333333,
+        "alpha-nDCG@10": 0.16732430347460636
+      },
+      "hybrid": {
+        "Recall@50": 0.25,
+        "Coverage@20": 0.3333333333333333,
+        "alpha-nDCG@10": 0.12021527770153678
+      }
+    },
+    "76407803": {
+      "keyword": {
+        "Recall@50": 0.05555555555555555,
+        "Coverage@20": 0.0,
+        "alpha-nDCG@10": 0.0
+      },
+      "semantic": {
+        "Recall@50": 0.4444444444444444,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.4045674143880428
+      },
+      "hybrid": {
+        "Recall@50": 0.2777777777777778,
+        "Coverage@20": 0.6666666666666666,
+        "alpha-nDCG@10": 0.1447013188140875
+      }
+    },
+    "76421734": {
+      "keyword": {
+        "Recall@50": 0.25,
+        "Coverage@20": 0.5,
+        "alpha-nDCG@10": 0.32631374616476566
+      },
+      "semantic": {
+        "Recall@50": 0.3,
+        "Coverage@20": 0.5,
+        "alpha-nDCG@10": 0.4930876201078532
+      },
+      "hybrid": {
+        "Recall@50": 0.25,
+        "Coverage@20": 0.5,
+        "alpha-nDCG@10": 0.4453762072886776
+      }
+    },
+    "76450328": {
+      "keyword": {
+        "Recall@50": 0.0,
+        "Coverage@20": 0.0,
+        "alpha-nDCG@10": 0.0
+      },
+      "semantic": {
+        "Recall@50": 0.4117647058823529,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.23525463106211142
+      },
+      "hybrid": {
+        "Recall@50": 0.35294117647058826,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.0
+      }
+    },
+    "76451997": {
+      "keyword": {
+        "Recall@50": 0.2,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.41550148154570116
+      },
+      "semantic": {
+        "Recall@50": 0.2,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.2547635669996356
+      },
+      "hybrid": {
+        "Recall@50": 0.2,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.6585542672440197
+      }
+    },
+    "76456041": {
+      "keyword": {
+        "Recall@50": 0.0625,
+        "Coverage@20": 0.0,
+        "alpha-nDCG@10": 0.0
+      },
+      "semantic": {
+        "Recall@50": 0.375,
+        "Coverage@20": 0.6,
+        "alpha-nDCG@10": 0.2741014205073996
+      },
+      "hybrid": {
+        "Recall@50": 0.3125,
+        "Coverage@20": 0.6,
+        "alpha-nDCG@10": 0.05529296831130465
+      }
+    },
+    "76517720": {
+      "keyword": {
+        "Recall@50": 0.6666666666666666,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.7257079021728202
+      },
+      "semantic": {
+        "Recall@50": 1.0,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.9546432561141988
+      },
+      "hybrid": {
+        "Recall@50": 0.6666666666666666,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.9071348777160253
+      }
+    },
+    "76525263": {
+      "keyword": {
+        "Recall@50": 0.0,
+        "Coverage@20": 0.0,
+        "alpha-nDCG@10": 0.0
+      },
+      "semantic": {
+        "Recall@50": 0.0,
+        "Coverage@20": 0.0,
+        "alpha-nDCG@10": 0.0
+      },
+      "hybrid": {
+        "Recall@50": 0.0,
+        "Coverage@20": 0.0,
+        "alpha-nDCG@10": 0.0
+      }
+    },
+    "76546004": {
+      "keyword": {
+        "Recall@50": 0.058823529411764705,
+        "Coverage@20": 0.3333333333333333,
+        "alpha-nDCG@10": 0.0
+      },
+      "semantic": {
+        "Recall@50": 0.7647058823529411,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.5867036731080421
+      },
+      "hybrid": {
+        "Recall@50": 0.7058823529411765,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.31757114754425514
+      }
+    },
+    "76554411": {
+      "keyword": {
+        "Recall@50": 0.3125,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.4099548327441386
+      },
+      "semantic": {
+        "Recall@50": 0.3125,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.49846921618715023
+      },
+      "hybrid": {
+        "Recall@50": 0.3125,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.41879333814746933
+      }
+    },
+    "76633836": {
+      "keyword": {
+        "Recall@50": 0.2,
+        "Coverage@20": 0.3333333333333333,
+        "alpha-nDCG@10": 0.08184117267243608
+      },
+      "semantic": {
+        "Recall@50": 1.0,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.9053502513774168
+      },
+      "hybrid": {
+        "Recall@50": 0.8,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.542563197691632
+      }
+    },
+    "76779817": {
+      "keyword": {
+        "Recall@50": 0.8333333333333334,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.6303983221935716
+      },
+      "semantic": {
+        "Recall@50": 0.3333333333333333,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.18897952642873
+      },
+      "hybrid": {
+        "Recall@50": 0.8333333333333334,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.8600006185989953
+      }
+    },
+    "76800148": {
+      "keyword": {
+        "Recall@50": 0.1111111111111111,
+        "Coverage@20": 0.3333333333333333,
+        "alpha-nDCG@10": 0.13766720024238588
+      },
+      "semantic": {
+        "Recall@50": 0.2222222222222222,
+        "Coverage@20": 0.0,
+        "alpha-nDCG@10": 0.0
+      },
+      "hybrid": {
+        "Recall@50": 0.1111111111111111,
+        "Coverage@20": 0.3333333333333333,
+        "alpha-nDCG@10": 0.0917781334949239
+      }
+    },
+    "76874633": {
+      "keyword": {
+        "Recall@50": 0.04,
+        "Coverage@20": 0.0,
+        "alpha-nDCG@10": 0.0
+      },
+      "semantic": {
+        "Recall@50": 0.4,
+        "Coverage@20": 0.5,
+        "alpha-nDCG@10": 0.5644633536913973
+      },
+      "hybrid": {
+        "Recall@50": 0.28,
+        "Coverage@20": 0.5,
+        "alpha-nDCG@10": 0.3297157417996867
+      }
+    },
+    "76906469": {
+      "keyword": {
+        "Recall@50": 0.25,
+        "Coverage@20": 0.3333333333333333,
+        "alpha-nDCG@10": 0.2520164307009389
+      },
+      "semantic": {
+        "Recall@50": 0.375,
+        "Coverage@20": 0.6666666666666666,
+        "alpha-nDCG@10": 0.18171822516873515
+      },
+      "hybrid": {
+        "Recall@50": 0.5,
+        "Coverage@20": 0.3333333333333333,
+        "alpha-nDCG@10": 0.41596479753466553
+      }
+    },
+    "76941870": {
+      "keyword": {
+        "Recall@50": 0.0,
+        "Coverage@20": 0.0,
+        "alpha-nDCG@10": 0.0
+      },
+      "semantic": {
+        "Recall@50": 0.6,
+        "Coverage@20": 0.75,
+        "alpha-nDCG@10": 0.7709770005820282
+      },
+      "hybrid": {
+        "Recall@50": 0.4,
+        "Coverage@20": 0.75,
+        "alpha-nDCG@10": 0.32513714727386106
+      }
+    },
+    "76990736": {
+      "keyword": {
+        "Recall@50": 0.25,
+        "Coverage@20": 0.75,
+        "alpha-nDCG@10": 0.44268981717218264
+      },
+      "semantic": {
+        "Recall@50": 0.65,
+        "Coverage@20": 0.75,
+        "alpha-nDCG@10": 0.6362149159625352
+      },
+      "hybrid": {
+        "Recall@50": 0.55,
+        "Coverage@20": 0.75,
+        "alpha-nDCG@10": 0.4874235579531129
+      }
+    },
+    "77011579": {
+      "keyword": {
+        "Recall@50": 0.13333333333333333,
+        "Coverage@20": 0.5,
+        "alpha-nDCG@10": 0.23854596568004044
+      },
+      "semantic": {
+        "Recall@50": 0.26666666666666666,
+        "Coverage@20": 0.75,
+        "alpha-nDCG@10": 0.23322315125396836
+      },
+      "hybrid": {
+        "Recall@50": 0.3333333333333333,
+        "Coverage@20": 0.75,
+        "alpha-nDCG@10": 0.33306756825533546
+      }
+    },
+    "77018045": {
+      "keyword": {
+        "Recall@50": 0.6666666666666666,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.3928115822328471
+      },
+      "semantic": {
+        "Recall@50": 0.4444444444444444,
+        "Coverage@20": 0.75,
+        "alpha-nDCG@10": 0.44789274327287465
+      },
+      "hybrid": {
+        "Recall@50": 0.7777777777777778,
+        "Coverage@20": 0.75,
+        "alpha-nDCG@10": 0.4389735117406261
+      }
+    },
+    "77043020": {
+      "keyword": {
+        "Recall@50": 0.0,
+        "Coverage@20": 0.0,
+        "alpha-nDCG@10": 0.0
+      },
+      "semantic": {
+        "Recall@50": 0.2,
+        "Coverage@20": 0.6666666666666666,
+        "alpha-nDCG@10": 0.34562164254539857
+      },
+      "hybrid": {
+        "Recall@50": 0.1,
+        "Coverage@20": 0.6666666666666666,
+        "alpha-nDCG@10": 0.1408646594656742
+      }
+    },
+    "77045559": {
+      "keyword": {
+        "Recall@50": 0.2222222222222222,
+        "Coverage@20": 0.3333333333333333,
+        "alpha-nDCG@10": 0.09329064377150427
+      },
+      "semantic": {
+        "Recall@50": 0.05555555555555555,
+        "Coverage@20": 0.0,
+        "alpha-nDCG@10": 0.0
+      },
+      "hybrid": {
+        "Recall@50": 0.1111111111111111,
+        "Coverage@20": 0.3333333333333333,
+        "alpha-nDCG@10": 0.0683341614279913
+      }
+    },
+    "77089465": {
+      "keyword": {
+        "Recall@50": 1.0,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.3566378486588371
+      },
+      "semantic": {
+        "Recall@50": 1.0,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.4064295115048393
+      },
+      "hybrid": {
+        "Recall@50": 1.0,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.36941574003729766
+      }
+    },
+    "77124499": {
+      "keyword": {
+        "Recall@50": 0.0,
+        "Coverage@20": 0.0,
+        "alpha-nDCG@10": 0.0
+      },
+      "semantic": {
+        "Recall@50": 0.6,
+        "Coverage@20": 0.6666666666666666,
+        "alpha-nDCG@10": 0.5382324035799304
+      },
+      "hybrid": {
+        "Recall@50": 0.3,
+        "Coverage@20": 0.6666666666666666,
+        "alpha-nDCG@10": 0.2951607222806917
+      }
+    },
+    "77178370": {
+      "keyword": {
+        "Recall@50": 0.2,
+        "Coverage@20": 0.3333333333333333,
+        "alpha-nDCG@10": 0.0
+      },
+      "semantic": {
+        "Recall@50": 0.06666666666666667,
+        "Coverage@20": 0.3333333333333333,
+        "alpha-nDCG@10": 0.0
+      },
+      "hybrid": {
+        "Recall@50": 0.2,
+        "Coverage@20": 0.0,
+        "alpha-nDCG@10": 0.0
+      }
+    },
+    "77352103": {
+      "keyword": {
+        "Recall@50": 0.75,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.4461399408318884
+      },
+      "semantic": {
+        "Recall@50": 0.75,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.2882130212048174
+      },
+      "hybrid": {
+        "Recall@50": 0.75,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.7986527776455339
+      }
+    },
+    "77438980": {
+      "keyword": {
+        "Recall@50": 0.46153846153846156,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.3521483021207578
+      },
+      "semantic": {
+        "Recall@50": 0.46153846153846156,
+        "Coverage@20": 0.6666666666666666,
+        "alpha-nDCG@10": 0.4637192303425462
+      },
+      "hybrid": {
+        "Recall@50": 0.6153846153846154,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.38519482619107864
+      }
+    },
+    "77465301": {
+      "keyword": {
+        "Recall@50": 0.25,
+        "Coverage@20": 0.75,
+        "alpha-nDCG@10": 0.17470012487414882
+      },
+      "semantic": {
+        "Recall@50": 0.8333333333333334,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.14081551636028347
+      },
+      "hybrid": {
+        "Recall@50": 0.6666666666666666,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.6360286928446437
+      }
+    },
+    "77507520": {
+      "keyword": {
+        "Recall@50": 0.3333333333333333,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.24728627045934456
+      },
+      "semantic": {
+        "Recall@50": 1.0,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.867775410664136
+      },
+      "hybrid": {
+        "Recall@50": 1.0,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.8037213937324477
+      }
+    },
+    "77536364": {
+      "keyword": {
+        "Recall@50": 0.46153846153846156,
+        "Coverage@20": 0.6666666666666666,
+        "alpha-nDCG@10": 0.5576815394576919
+      },
+      "semantic": {
+        "Recall@50": 0.46153846153846156,
+        "Coverage@20": 0.6666666666666666,
+        "alpha-nDCG@10": 0.2715015705142808
+      },
+      "hybrid": {
+        "Recall@50": 0.5384615384615384,
+        "Coverage@20": 0.6666666666666666,
+        "alpha-nDCG@10": 0.6896121783566304
+      }
+    },
+    "77544292": {
+      "keyword": {
+        "Recall@50": 0.2571428571428571,
+        "Coverage@20": 0.8,
+        "alpha-nDCG@10": 0.24931495279975716
+      },
+      "semantic": {
+        "Recall@50": 0.4,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.5527865877341761
+      },
+      "hybrid": {
+        "Recall@50": 0.42857142857142855,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.2699379334222441
+      }
+    },
+    "77570745": {
+      "keyword": {
+        "Recall@50": 0.25,
+        "Coverage@20": 0.3333333333333333,
+        "alpha-nDCG@10": 0.08995991735585863
+      },
+      "semantic": {
+        "Recall@50": 0.25,
+        "Coverage@20": 0.6666666666666666,
+        "alpha-nDCG@10": 0.19922691791878133
+      },
+      "hybrid": {
+        "Recall@50": 0.5,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.0
+      }
+    },
+    "77644218": {
+      "keyword": {
+        "Recall@50": 1.0,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.42996962212994483
+      },
+      "semantic": {
+        "Recall@50": 0.75,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.9623792052860305
+      },
+      "hybrid": {
+        "Recall@50": 1.0,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.8941443579744073
+      }
+    },
+    "77645110": {
+      "keyword": {
+        "Recall@50": 0.36,
+        "Coverage@20": 0.75,
+        "alpha-nDCG@10": 0.16678956054608893
+      },
+      "semantic": {
+        "Recall@50": 0.44,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.6507925647980032
+      },
+      "hybrid": {
+        "Recall@50": 0.52,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.3013298428902065
+      }
+    },
+    "77683730": {
+      "keyword": {
+        "Recall@50": 0.42857142857142855,
+        "Coverage@20": 0.5,
+        "alpha-nDCG@10": 0.27270272808899243
+      },
+      "semantic": {
+        "Recall@50": 0.7142857142857143,
+        "Coverage@20": 0.5,
+        "alpha-nDCG@10": 0.38386415683736697
+      },
+      "hybrid": {
+        "Recall@50": 0.7142857142857143,
+        "Coverage@20": 0.5,
+        "alpha-nDCG@10": 0.3921052342234053
+      }
+    },
+    "77715526": {
+      "keyword": {
+        "Recall@50": 0.0,
+        "Coverage@20": 0.0,
+        "alpha-nDCG@10": 0.0
+      },
+      "semantic": {
+        "Recall@50": 0.5,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.849483877391467
+      },
+      "hybrid": {
+        "Recall@50": 0.3333333333333333,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.4549384760033437
+      }
+    },
+    "77744941": {
+      "keyword": {
+        "Recall@50": 0.0,
+        "Coverage@20": 0.0,
+        "alpha-nDCG@10": 0.0
+      },
+      "semantic": {
+        "Recall@50": 1.0,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.796476028487367
+      },
+      "hybrid": {
+        "Recall@50": 1.0,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.30051210034092496
+      }
+    },
+    "77762811": {
+      "keyword": {
+        "Recall@50": 0.2857142857142857,
+        "Coverage@20": 0.3333333333333333,
+        "alpha-nDCG@10": 0.40994577359119727
+      },
+      "semantic": {
+        "Recall@50": 0.5,
+        "Coverage@20": 0.6666666666666666,
+        "alpha-nDCG@10": 0.18648291502703826
+      },
+      "hybrid": {
+        "Recall@50": 0.42857142857142855,
+        "Coverage@20": 0.6666666666666666,
+        "alpha-nDCG@10": 0.4201797420697321
+      }
+    },
+    "77782167": {
+      "keyword": {
+        "Recall@50": 0.07692307692307693,
+        "Coverage@20": 0.0,
+        "alpha-nDCG@10": 0.0
+      },
+      "semantic": {
+        "Recall@50": 0.46153846153846156,
+        "Coverage@20": 0.0,
+        "alpha-nDCG@10": 0.0
+      },
+      "hybrid": {
+        "Recall@50": 0.23076923076923078,
+        "Coverage@20": 0.0,
+        "alpha-nDCG@10": 0.0
+      }
+    },
+    "77844073": {
+      "keyword": {
+        "Recall@50": 0.625,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.21683289493138078
+      },
+      "semantic": {
+        "Recall@50": 0.625,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.5730436460942611
+      },
+      "hybrid": {
+        "Recall@50": 0.75,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.39601068796240496
+      }
+    },
+    "77981098": {
+      "keyword": {
+        "Recall@50": 1.0,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 1.0
+      },
+      "semantic": {
+        "Recall@50": 1.0,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 1.0
+      },
+      "hybrid": {
+        "Recall@50": 1.0,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 1.0
+      }
+    },
+    "77998898": {
+      "keyword": {
+        "Recall@50": 0.5714285714285714,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.7765977959662757
+      },
+      "semantic": {
+        "Recall@50": 0.7142857142857143,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.48997865603313934
+      },
+      "hybrid": {
+        "Recall@50": 0.5714285714285714,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.7765977959662757
+      }
+    },
+    "78020395": {
+      "keyword": {
+        "Recall@50": 0.4444444444444444,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.6191396832132648
+      },
+      "semantic": {
+        "Recall@50": 0.6666666666666666,
+        "Coverage@20": 0.5,
+        "alpha-nDCG@10": 0.47572032859190494
+      },
+      "hybrid": {
+        "Recall@50": 0.4444444444444444,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.630056970575265
+      }
+    },
+    "78102745": {
+      "keyword": {
+        "Recall@50": 0.16666666666666666,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.28155985986050336
+      },
+      "semantic": {
+        "Recall@50": 0.3333333333333333,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.4124777391926879
+      },
+      "hybrid": {
+        "Recall@50": 0.16666666666666666,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.6537617490026513
+      }
+    },
+    "78145421": {
+      "keyword": {
+        "Recall@50": 0.0,
+        "Coverage@20": 0.0,
+        "alpha-nDCG@10": 0.0
+      },
+      "semantic": {
+        "Recall@50": 0.14285714285714285,
+        "Coverage@20": 0.0,
+        "alpha-nDCG@10": 0.0
+      },
+      "hybrid": {
+        "Recall@50": 0.0,
+        "Coverage@20": 0.0,
+        "alpha-nDCG@10": 0.0
+      }
+    },
+    "78153954": {
+      "keyword": {
+        "Recall@50": 0.1724137931034483,
+        "Coverage@20": 0.6666666666666666,
+        "alpha-nDCG@10": 0.11363600894138232
+      },
+      "semantic": {
+        "Recall@50": 0.1724137931034483,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.2872740786437809
+      },
+      "hybrid": {
+        "Recall@50": 0.2413793103448276,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.4083009607738767
+      }
+    },
+    "78155250": {
+      "keyword": {
+        "Recall@50": 0.5833333333333334,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.311031815436007
+      },
+      "semantic": {
+        "Recall@50": 0.5833333333333334,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.07207506426450333
+      },
+      "hybrid": {
+        "Recall@50": 0.5833333333333334,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.3281977077859077
+      }
+    },
+    "78171598": {
+      "keyword": {
+        "Recall@50": 0.0,
+        "Coverage@20": 0.0,
+        "alpha-nDCG@10": 0.0
+      },
+      "semantic": {
+        "Recall@50": 0.4,
+        "Coverage@20": 0.6666666666666666,
+        "alpha-nDCG@10": 0.24276440688413572
+      },
+      "hybrid": {
+        "Recall@50": 0.2,
+        "Coverage@20": 0.6666666666666666,
+        "alpha-nDCG@10": 0.06722652864369379
+      }
+    },
+    "78199269": {
+      "keyword": {
+        "Recall@50": 0.25,
+        "Coverage@20": 0.5,
+        "alpha-nDCG@10": 0.10910444137826238
+      },
+      "semantic": {
+        "Recall@50": 0.0,
+        "Coverage@20": 0.0,
+        "alpha-nDCG@10": 0.0
+      },
+      "hybrid": {
+        "Recall@50": 0.125,
+        "Coverage@20": 0.5,
+        "alpha-nDCG@10": 0.0
+      }
+    },
+    "78216871": {
+      "keyword": {
+        "Recall@50": 0.09090909090909091,
+        "Coverage@20": 0.25,
+        "alpha-nDCG@10": 0.2432584200029851
+      },
+      "semantic": {
+        "Recall@50": 0.18181818181818182,
+        "Coverage@20": 0.25,
+        "alpha-nDCG@10": 0.2838014900034826
+      },
+      "hybrid": {
+        "Recall@50": 0.18181818181818182,
+        "Coverage@20": 0.25,
+        "alpha-nDCG@10": 0.2432584200029851
+      }
+    },
+    "78366661": {
+      "keyword": {
+        "Recall@50": 0.6470588235294118,
+        "Coverage@20": 0.75,
+        "alpha-nDCG@10": 0.7275683722111119
+      },
+      "semantic": {
+        "Recall@50": 0.7058823529411765,
+        "Coverage@20": 0.75,
+        "alpha-nDCG@10": 0.4658039200916658
+      },
+      "hybrid": {
+        "Recall@50": 0.7058823529411765,
+        "Coverage@20": 0.75,
+        "alpha-nDCG@10": 0.7993312116086903
+      }
+    },
+    "78485621": {
+      "keyword": {
+        "Recall@50": 0.0,
+        "Coverage@20": 0.0,
+        "alpha-nDCG@10": 0.0
+      },
+      "semantic": {
+        "Recall@50": 0.5833333333333334,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.938225196221689
+      },
+      "hybrid": {
+        "Recall@50": 0.4166666666666667,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.3339389718429862
+      }
+    },
+    "78489329": {
+      "keyword": {
+        "Recall@50": 0.2222222222222222,
+        "Coverage@20": 0.3333333333333333,
+        "alpha-nDCG@10": 0.1389813340765639
+      },
+      "semantic": {
+        "Recall@50": 0.4444444444444444,
+        "Coverage@20": 0.6666666666666666,
+        "alpha-nDCG@10": 0.39234540688378317
+      },
+      "hybrid": {
+        "Recall@50": 0.5555555555555556,
+        "Coverage@20": 0.6666666666666666,
+        "alpha-nDCG@10": 0.14912804355615297
+      }
+    },
+    "78503869": {
+      "keyword": {
+        "Recall@50": 0.2,
+        "Coverage@20": 0.0,
+        "alpha-nDCG@10": 0.0
+      },
+      "semantic": {
+        "Recall@50": 0.6,
+        "Coverage@20": 0.3333333333333333,
+        "alpha-nDCG@10": 0.11924689667006011
+      },
+      "hybrid": {
+        "Recall@50": 0.4,
+        "Coverage@20": 0.3333333333333333,
+        "alpha-nDCG@10": 0.06894016694975609
+      }
+    },
+    "78545754": {
+      "keyword": {
+        "Recall@50": 0.2,
+        "Coverage@20": 0.8333333333333334,
+        "alpha-nDCG@10": 0.20839162076272816
+      },
+      "semantic": {
+        "Recall@50": 0.6666666666666666,
+        "Coverage@20": 0.8333333333333334,
+        "alpha-nDCG@10": 0.28266262785606316
+      },
+      "hybrid": {
+        "Recall@50": 0.6666666666666666,
+        "Coverage@20": 0.8333333333333334,
+        "alpha-nDCG@10": 0.4445612721448347
+      }
+    },
+    "78549270": {
+      "keyword": {
+        "Recall@50": 0.13333333333333333,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.6887991640418256
+      },
+      "semantic": {
+        "Recall@50": 0.3333333333333333,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.42896100528455255
+      },
+      "hybrid": {
+        "Recall@50": 0.26666666666666666,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.6887991640418256
+      }
+    },
+    "78552532": {
+      "keyword": {
+        "Recall@50": 0.0,
+        "Coverage@20": 0.0,
+        "alpha-nDCG@10": 0.0
+      },
+      "semantic": {
+        "Recall@50": 1.0,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.9187493960555
+      },
+      "hybrid": {
+        "Recall@50": 1.0,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.43588713712433413
+      }
+    },
+    "78574282": {
+      "keyword": {
+        "Recall@50": 0.25,
+        "Coverage@20": 0.0,
+        "alpha-nDCG@10": 0.0
+      },
+      "semantic": {
+        "Recall@50": 0.5,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.780644264504445
+      },
+      "hybrid": {
+        "Recall@50": 0.5,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.4490979889897438
+      }
+    },
+    "78656632": {
+      "keyword": {
+        "Recall@50": 0.18181818181818182,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.6516674183391657
+      },
+      "semantic": {
+        "Recall@50": 0.36363636363636365,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.0
+      },
+      "hybrid": {
+        "Recall@50": 0.18181818181818182,
+        "Coverage@20": 1.0,
+        "alpha-nDCG@10": 0.41115636366327774
+      }
+    }
+  }
+}

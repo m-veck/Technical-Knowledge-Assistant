@@ -8,11 +8,19 @@ import typer
 from tka import config
 from tka.database import delete_database, setup_database
 from tka.download import download_data
+from tka.evaluation import evaluate_retrieval
 from tka.ingest import build_index
 from tka.retrieval import show_search
 from tka.split import make_split
 
 app = typer.Typer(no_args_is_help=True)
+
+
+class Split(str, Enum):
+    """The two parts of the questions, shown as choices in --help."""
+
+    dev = "dev"
+    test = "test"
 
 
 class Mode(str, Enum):
@@ -70,3 +78,17 @@ def search(
 ) -> None:
     """Search the index and show the top results (no answer yet, just the retrieved documents)."""
     show_search(question, mode.value, k)
+
+
+@app.command()
+def evaluation(
+    split: Annotated[Split, typer.Option(help="dev (for tuning) or test (the final run, once).")] = Split.dev,
+    limit: Annotated[int | None, typer.Option(help="Only the first N questions (for a test run, nothing saved).")] = None,
+) -> None:
+    """Measure retrieval quality for keyword, semantic and hybrid search; saves to results/."""
+    if split == Split.test:
+        answer = typer.prompt('The test part is meant to be run once, at the end. Type "test" to continue')
+        if answer != "test":
+            typer.echo("Cancelled.")
+            raise typer.Exit()
+    evaluate_retrieval(split.value, limit)
