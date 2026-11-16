@@ -8,6 +8,7 @@ from tka import config
 from tka.database import delete_database, setup_database
 from tka.download import download_data
 from tka.ingest import build_index
+from tka.split import make_split
 
 app = typer.Typer(no_args_is_help=True)
 
@@ -43,3 +44,9 @@ def index(
 ) -> None:
     """Embed corpus rows and store them in the database. Continues where the last run stopped."""
     build_index(limit)
+
+
+@app.command()
+def split() -> None:
+    """Split the queries once into dev (tuning) and test (final run); writes splits/split.json."""
+    make_split()

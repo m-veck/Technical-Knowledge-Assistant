@@ -30,6 +30,11 @@ EMBED_PRICE_PER_MILLION = 0.12  # USD per 1M input tokens, only for the cost lin
 BASE64_MIN_LENGTH = 200
 BASE64_PLACEHOLDER = "[base64 removed]"
 
+# Dev/test split of the queries: made once, committed so reviewers see what we tuned and tested on
+SPLIT_PATH = ROOT / "splits" / "split.json"
+SPLIT_SEED = 42
+SPLIT_DEV_SIZE = 68  # 1/3 dev for tuning, the other 135 are the test part, run once at the end
+
 # Evaluation outputs
 RESULTS_DIR = ROOT / "results"
 

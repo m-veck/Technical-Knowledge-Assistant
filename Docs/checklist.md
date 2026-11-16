@@ -15,7 +15,7 @@ What the final solution needs. The "Required" part comes straight from [assignme
 
 ### Evaluation
 
-- [ ] Questions split into a development part and a separate part for the final evaluation
+- [x] Questions split into a development part and a separate part for the final evaluation
 - [ ] Retrieval quality measured
 - [ ] Answer quality measured
 - [ ] Measured whether the citations support the answers
@@ -40,7 +40,7 @@ Not literally in the assignment, but my own
 - [ ] Plain hybrid baseline first (BM25 + embeddings, merged with reciprocal rank fusion), measured before adding anything else
 - [ ] Flat index: one embedding per corpus row (no extra chunking); every row fits whole in Cohere Embed
 - [ ] "Not enough information" base layers: retrieval cutoff before the LLM, system prompt rule, citation check after the answer
-- [ ] Dev/test split is reproducible (fixed seed, split saved in the repo); test part is not used for tuning
+- [ ] Dev/test split is reproducible (fixed seed, split saved in the repo); test part is not used for tuning. Ratio: 1/3 dev (68 questions), 2/3 test (135 questions)
 - [ ] Small hand-written set of out-of-scope questions to test the "I don't know" behaviour (the official set has almost none)
 - [ ] Time and cost per question logged during evaluation, for the trade-offs in the report
 - [ ] Works from a clean clone by following the README only

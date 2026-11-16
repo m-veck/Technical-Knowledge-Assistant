@@ -23,4 +23,5 @@ Then put the given Anthropic and Cohere API keys in `.env`.
 |---|---|
 | `uv run tka download` | Download the LangChain corpus and queries into `data/raw/` |
 | `uv run tka setup` | Create the SQLite database and its tables in `data/` (safe to rerun; `--clean` deletes it first) |
+| `uv run tka split` | Split the 203 evaluation questions once into dev (68) and test (135); writes `splits/split.json` (already done and committed) |
 | `uv run tka index` | Embed the corpus rows and store them in the database; continues where the last run stopped (`--limit 100` for a test run) |
