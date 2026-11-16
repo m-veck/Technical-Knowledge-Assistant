@@ -6,7 +6,7 @@ What the final solution needs. The "Required" part comes straight from [assignme
 
 ### Assistant
 
-- [ ] Loads the LangChain corpus (`freshstack/corpus-oct-2024`, subset `langchain`) and makes it searchable
+- [x] Loads the LangChain corpus (`freshstack/corpus-oct-2024`, subset `langchain`) and makes it searchable
 - [ ] Answers questions using retrieved information from the corpus only (no live web search)
 - [ ] Cites the supporting corpus chunks by document ID (the original `_id`)
 - [ ] Says clearly when the corpus does not contain enough information, instead of guessing
@@ -16,7 +16,7 @@ What the final solution needs. The "Required" part comes straight from [assignme
 ### Evaluation
 
 - [x] Questions split into a development part and a separate part for the final evaluation
-- [ ] Retrieval quality measured
+- [x] Retrieval quality measured
 - [ ] Answer quality measured
 - [ ] Measured whether the citations support the answers
 - [ ] Final evaluation run on the held-out part (all remaining questions, or a documented subset)
@@ -37,15 +37,36 @@ What the final solution needs. The "Required" part comes straight from [assignme
 
 Not literally in the assignment, but my own
 
-- [ ] Plain hybrid baseline first (BM25 + embeddings, merged with reciprocal rank fusion), measured before adding anything else
-- [ ] Flat index: one embedding per corpus row (no extra chunking); every row fits whole in Cohere Embed
+### Index and retrieval
+
+- [x] Flat index: one embedding per corpus row (no extra chunking); every row fits whole in Cohere Embed
+- [x] Plain hybrid baseline first (BM25 + embeddings, merged with reciprocal rank fusion), measured before adding anything else
+- [x] Fusion tuned on the dev part only: score fusion (0.7 semantic + 0.3 keyword) replaced rank fusion
+- [x] Retrieval scores of every run saved in `results/`, so they can be inspected without rerunning
+
+### Answer step (version 1)
+
+- [ ] One retrieval followed by one LLM call; no agent loop, no tools
+- [ ] Answer as structured JSON: claims with the full corpus `_id` per claim, and an `insufficient_context` flag
+- [ ] Retrieval result saved per question (question, document IDs, scores, rank)
+- [ ] Citation check in code: every cited `_id` must be in that question's retrieval result; the invalid-citation rate is reported
 - [ ] "Not enough information" base layers: retrieval cutoff before the LLM, system prompt rule, citation check after the answer
-- [ ] Dev/test split is reproducible (fixed seed, split saved in the repo); test part is not used for tuning. Ratio: 1/3 dev (68 questions), 2/3 test (135 questions)
-- [ ] Small hand-written set of out-of-scope questions to test the "I don't know" behaviour (the official set has almost none)
+
+### Evaluation
+
+- [x] Dev/test split is reproducible (fixed seed, split saved in the repo); test part is not used for tuning. Ratio: 1/3 dev (68 questions), 2/3 test (135 questions)
+- [ ] LLM judge for answer quality: which nuggets made it into the answer. The judge is evaluation only: it may see the reference answer and the nuggets, the assistant never does
+- [ ] LLM judge for citation support: each claim checked against the chunks cited for it
+- [ ] Failures sorted into buckets for the report: retrieval missed the chunks, chunks retrieved but not used, false refusal, claim not supported by its citation
+- [ ] 5 to 10 answers checked by hand, to pick the good and poor examples
+- [ ] 10 to 20 hand-written out-of-scope questions to test the "I don't know" behaviour (the official set has almost none)
 - [ ] Time and cost per question logged during evaluation, for the trade-offs in the report
+
+### Repository
+
 - [ ] Works from a clean clone by following the README only
 - [ ] No API keys in the repo (`.env.example` instead)
-- [ ] Use `freshstack/queries-oct-2024` (the assignment's "freshstacko" is a typo)
+- [x] Use `freshstack/queries-oct-2024` (the assignment's "freshstacko" is a typo)
 
 ## Aftercare (easy to set up, use and understand)
 
@@ -54,15 +75,3 @@ Not literally in the assignment, but my own
 - [ ] CLI has `--help` and the README shows a short usage example
 - [ ] Clear error messages for the common problems (missing API key, missing index)
 - [ ] Documentation lives in the repo: README for setup, run, approach and results; `Docs/` for background
-
-## Optional (only if the above works and there is time)
-
-- [ ] Support score with a tunable threshold and a retry loop
-- [ ] Overseer for evaluation (a slow, thorough LLM that fact-checks the outputs on a subset)
-- [ ] Language and version handling: tag chunks with language, repo, package and doc type (docs, code, notebook, test), read from the metadata (`_id` path and `url`) during chunking; soft boost for the question's language
-- [ ] Smart chunking compared against the flat index: split rows on headings and code boundaries, every sub-chunk keeps its parent `_id`, cite and evaluate on the parent, each parent cited once
-- [ ] Document context in each chunk, compared against the baseline: Voyage context-4 (own chunks grouped per document) or Anthropic-style contextual retrieval (an LLM writes a context line per chunk)
-- [ ] Chunk enrichment (keywords, generated questions, context summary), compared against the baseline
-- [ ] MCP server on top of the same search, so an existing agent can use it
-- [ ] Local option: local embedding model with a SQLite index
-- [ ] Filter boilerplate (licences, code of conduct) out of the index. Default is to leave it in; only filter if measuring on the dev questions shows it helps
