@@ -9,12 +9,16 @@ from tka import config
 from tka.ask import ask as ask_question
 from tka.database import delete_database, setup_database
 from tka.download import download_data
-from tka.evaluation import evaluate_retrieval
+from tka.evaluation_retrieval import evaluate_retrieval
 from tka.ingest import build_index
 from tka.retrieval import show_search
 from tka.split import make_split
 
 app = typer.Typer(no_args_is_help=True)
+
+# `tka evaluation` is a group: `tka evaluation retrieval`, and later `answers` and `judge`
+evaluation_app = typer.Typer(no_args_is_help=True, help="Measure the quality of the retrieval and of the answers.")
+app.add_typer(evaluation_app, name="evaluation")
 
 
 class Split(str, Enum):
@@ -94,8 +98,8 @@ def ask(
     ask_question(question, model, details)
 
 
-@app.command()
-def evaluation(
+@evaluation_app.command()
+def retrieval(
     split: Annotated[Split, typer.Option(help="dev (for tuning) or test (the final run, once).")] = Split.dev,
     limit: Annotated[int | None, typer.Option(help="Only the first N questions (for a test run, nothing saved).")] = None,
 ) -> None:
