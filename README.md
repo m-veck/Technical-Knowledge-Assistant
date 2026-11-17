@@ -29,6 +29,8 @@ uv run tka ask "How do I add memory to a LangChain agent?"
 > The `.env` file holds the Anthropic and Cohere API keys. To use your own keys instead, copy `.env.example` to `.env` and fill them in.
 >
 > If the download in step 3 fails, get `tka.db` by hand from the [release page](https://github.com/m-veck/Technical-Knowledge-Assistant/releases/tag/index-2026-11-17) and put it at `data/tka.db`.
+>
+> On a managed Windows laptop, `uv run tka` can fail with "Access is denied": Defender blocks the `tka.exe` launcher that `uv sync` creates. Use `uv run python -m tka` instead, with the same arguments, for example `uv run python -m tka download database`.
 
 ## More documentation
 
