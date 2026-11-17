@@ -26,7 +26,7 @@ The evaluation reads this field. "The assistant said it did not know" means that
 
 ## The enforced JSON schema
 
-The call asks for structured output with a JSON schema (`ANSWER_SCHEMA`). The API enforces it: the reply always has `outcome`, `answer` and `citations`, each citation has a `statement` and a list of `doc_ids`, and no other fields are allowed. The code has no repair step for broken JSON, because there is nothing to repair.
+The call asks for structured output with a JSON schema (`ANSWER_SCHEMA`). The API enforces it on every reply that finishes: it has `outcome`, `answer` and `citations`, each citation has a `statement` and a list of `doc_ids`, and no other fields are allowed. The code has no repair step for broken JSON. A reply that is cut off at the ceiling of 16,000 tokens is not handled and stops with a Python error; the longest of the 203 saved evaluation answers used 1,997.
 
 ## Sources from the cited ids
 

@@ -1,0 +1,730 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>tka command flows</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  color-scheme: light;
+  --sans: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "Cascadia Code", Consolas, monospace;
+  --page: #f6f5f1; --surface: #ffffff; --sunk: #faf9f6; --border: #e5e3dc; --border2: #d6d3ca;
+  --text: #17171b; --text2: #55545c; --muted: #8d8c93; --edge: #a8a69d;
+  --build: #2563c9;  --build-bg: #eaf1fc;
+  --answer: #0b8a70; --answer-bg: #e2f5ef;
+  --eval: #cf5219;   --eval-bg: #fdeee5;
+  --report: #a3367a; --report-bg: #fbeaf4;
+  --repo: #4b5563;   --repo-bg: #eff1f4;
+  --api: #7647cf;    --api-bg: #f1ebfc;
+  --paid: #a87300;   --paid-bg: #fdf2d3;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--page); color: var(--text); font: 14px/1.5 var(--sans); -webkit-font-smoothing: antialiased; }
+main { max-width: 1260px; margin: 0 auto; padding: 36px 16px 80px; }
+code { font-family: var(--mono); font-size: 0.88em; }
+
+/* header */
+.eyebrow { font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 28px; line-height: 1.2; letter-spacing: -0.02em; margin: 0 0 8px; font-weight: 700; }
+.lede { color: var(--text2); max-width: 760px; margin: 0 0 18px; font-size: 15px; }
+nav { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 22px; }
+nav a { color: var(--text2); text-decoration: none; border: 1px solid var(--border); border-radius: 999px; padding: 3px 11px; font-size: 12.5px; background: var(--surface); }
+nav a:hover { color: var(--text); border-color: var(--border2); }
+
+/* cards */
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 20px 22px; margin: 0 0 18px; box-shadow: 0 1px 2px rgba(20, 20, 30, .04); }
+.card-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 16px; margin: 0 0 4px; }
+.card h2 { font-size: 17px; letter-spacing: -0.01em; margin: 0; font-weight: 650; }
+.what { color: var(--text2); font-size: 13px; margin: 2px 0 14px; max-width: 820px; }
+
+/* filter */
+.filter { display: inline-flex; flex-wrap: wrap; gap: 4px; background: var(--sunk); border: 1px solid var(--border); border-radius: 10px; padding: 3px; }
+.filter button { font: 500 12.5px var(--sans); border: 0; background: transparent; color: var(--text2); padding: 5px 11px; border-radius: 7px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+.filter button:hover { color: var(--text); }
+.filter button[aria-pressed="true"] { background: var(--surface); color: var(--text); box-shadow: 0 1px 2px rgba(0, 0, 0, .08), 0 0 0 1px var(--border); }
+.dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; flex: none; }
+.dot.build { background: var(--build); } .dot.answer { background: var(--answer); } .dot.evaluate { background: var(--eval); } .dot.report { background: var(--report); }
+[data-g] { transition: opacity .2s; }
+.dim { opacity: .14; }
+.card.dim, .tree-row.dim, td.dim, th.dim { opacity: .3; }
+.half { opacity: .5; }
+.card.half, td.half, th.half { opacity: .65; }
+
+/* chart */
+.chart-scroll { overflow-x: auto; margin: 0 -6px; padding: 0 6px; }
+#chart { display: block; width: 100%; min-width: 940px; height: auto; }
+#chart text { font-family: var(--sans); }
+.lane-label { font: 700 11px var(--sans); letter-spacing: .14em; text-transform: uppercase; }
+.lane-text { font-size: 12px; fill: var(--text2); }
+.n-title { font: 700 12.5px var(--mono); fill: var(--text); }
+.n-tka { font-weight: 400; fill: var(--muted); }
+.n-file { font: 600 12px var(--mono); fill: var(--text); }
+.n-sub { font-size: 10.5px; fill: var(--text2); }
+.n-mono { font: 400 10.5px var(--mono); fill: var(--text2); }
+.n-small { font-size: 9.5px; fill: var(--muted); letter-spacing: .06em; text-transform: uppercase; font-weight: 600; }
+.edge { fill: none; stroke: var(--edge); stroke-width: 1.6; stroke-linejoin: round; }
+.edge.uses { stroke: var(--answer); stroke-dasharray: 5 4; }
+.e-label { font-size: 10.5px; fill: var(--muted); font-style: italic; paint-order: stroke; stroke: var(--surface); stroke-width: 4px; stroke-linejoin: round; }
+.e-label.uses { fill: var(--answer); font-style: normal; font-family: var(--mono); font-weight: 600; }
+.badge text { font-size: 10px; font-weight: 600; }
+.b-api rect { fill: var(--api-bg); stroke: var(--api); stroke-width: .8; } .b-api text { fill: var(--api); }
+.b-answer rect { fill: var(--answer-bg); stroke: var(--answer); stroke-width: .8; } .b-answer text { fill: var(--answer); font-family: var(--mono); }
+.cmd { cursor: pointer; }
+.cmd .box { fill: var(--surface); stroke-width: 1.6; }
+.cmd:hover .box { stroke-width: 2.6; }
+.shadow { opacity: .06; transition: opacity .15s; }
+.cmd:hover .shadow { opacity: .14; }
+.coin circle { fill: var(--paid-bg); stroke: var(--paid); stroke-width: 1.3; }
+.coin text { font: 700 11px var(--sans); fill: var(--paid); }
+
+/* chips (steps and matrix) */
+.chip { display: inline-flex; align-items: baseline; gap: 4px; border-radius: 6px; padding: 1px 7px; font-size: 11.5px; line-height: 1.5; border: 1px solid transparent; font-family: var(--mono); }
+.chip b { font-family: var(--sans); font-weight: 650; font-size: 11px; }
+.chip.corpus { background: var(--build-bg); color: var(--build); border-color: #c3d6f5; }
+.chip.queries { background: var(--eval-bg); color: var(--eval); border-color: #f4cdb8; }
+.chip.repo { background: var(--repo-bg); color: var(--repo); border-color: #d5d9e0; }
+.chip.api { background: var(--api-bg); color: var(--api); border-color: #d9c9f5; }
+.kinds { display: flex; flex-wrap: wrap; gap: 6px 14px; margin: 14px 0 0; padding-top: 12px; border-top: 1px solid var(--border); font-size: 12px; color: var(--text2); align-items: center; }
+
+/* file tree */
+.tree { border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+.tree-row { display: grid; grid-template-columns: minmax(260px, 1.1fr) 250px 2fr; gap: 12px; align-items: center; padding: 5px 14px; border-top: 1px solid var(--border); font-size: 12.5px; }
+.tree-row:first-child { border-top: 0; }
+.tree-row.folder { background: var(--sunk); }
+.tree-row .path { font-family: var(--mono); font-size: 12.5px; white-space: pre; overflow: hidden; text-overflow: ellipsis; }
+.tree-row .path .pre { color: #c4c1b8; }
+.tree-row.folder .path .name { font-weight: 700; }
+.tree-row .desc { color: var(--text2); }
+.parts { display: flex; flex-wrap: wrap; gap: 4px; }
+.part { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 600; padding: 1px 8px 1px 6px; border-radius: 999px; border: 1px solid; }
+.part.build { color: var(--build); background: var(--build-bg); border-color: #c3d6f5; }
+.part.answer { color: var(--answer); background: var(--answer-bg); border-color: #b5e3d6; }
+.part.evaluate { color: var(--eval); background: var(--eval-bg); border-color: #f4cdb8; }
+.part.report { color: var(--report); background: var(--report-bg); border-color: #efc3dc; }
+.part.all { color: var(--text2); background: var(--sunk); border-color: var(--border2); }
+
+/* matrix */
+.scroll { overflow-x: auto; }
+table { border-collapse: separate; border-spacing: 0; font-size: 12.5px; width: 100%; min-width: 1060px; }
+th, td { border-bottom: 1px solid var(--border); padding: 7px 6px; text-align: center; }
+th { font-weight: 600; font-size: 12px; vertical-align: bottom; border-bottom: 3px solid var(--gc, var(--border)); }
+th code { font-size: 11px; }
+td:first-child, th:first-child { text-align: left; white-space: nowrap; }
+tr:hover td { background: var(--sunk); }
+.cell { display: inline-block; min-width: 26px; padding: 1px 7px; border-radius: 6px; font-size: 11.5px; font-weight: 650; }
+.cell.r { color: var(--build); background: var(--build-bg); }
+.cell.w { color: #3d3c44; background: #e9e7e1; }
+.cell.rw { color: #3d3c44; background: linear-gradient(90deg, var(--build-bg) 50%, #e9e7e1 50%); }
+.cell.c { color: var(--api); background: var(--api-bg); font-weight: 600; }
+.cell.q { color: var(--eval); background: var(--eval-bg); }
+.guard { margin: 14px 0 0; padding: 9px 12px; border-radius: 8px; background: var(--sunk); border: 1px solid var(--border); font-size: 12.5px; color: var(--text2); }
+.guard b { color: var(--text); }
+
+/* command cards */
+.group-head { display: flex; align-items: center; gap: 10px; margin: 34px 0 12px; }
+.group-head h2 { margin: 0; font-size: 20px; letter-spacing: -0.015em; }
+.group-head p { margin: 0; color: var(--text2); font-size: 13px; }
+.group-head .bar { width: 6px; align-self: stretch; border-radius: 3px; background: var(--gc); }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 540px), 1fr)); gap: 16px; align-items: start; }
+.g-build { --gc: var(--build); --gbg: var(--build-bg); }
+.g-answer { --gc: var(--answer); --gbg: var(--answer-bg); }
+.g-evaluate { --gc: var(--eval); --gbg: var(--eval-bg); }
+.g-report { --gc: var(--report); --gbg: var(--report-bg); }
+.flow-card { margin: 0; border-top: 4px solid var(--gc); scroll-margin-top: 16px; }
+.flow-card:target { box-shadow: 0 0 0 3px var(--gbg), 0 4px 18px rgba(0, 0, 0, .06); }
+.flow-card h3 { font: 700 15px var(--mono); margin: 0; color: var(--text); }
+.steps { list-style: none; margin: 4px 0 0; padding: 0; counter-reset: s; }
+.steps li { position: relative; padding: 0 0 16px 40px; }
+.steps li::before { counter-increment: s; content: counter(s); position: absolute; left: 0; top: -1px; width: 26px; height: 26px; border-radius: 50%; background: var(--surface); border: 1.5px solid var(--gc); color: var(--gc); font: 700 12px/23px var(--mono); text-align: center; z-index: 1; }
+.steps li::after { content: ""; position: absolute; left: 12.25px; top: 26px; bottom: 0; width: 1.5px; background: var(--border2); }
+.steps li:last-child { padding-bottom: 0; }
+.steps li:last-child::after { display: none; }
+.steps li.input::before { background: var(--gbg); }
+.steps li.out::before { background: var(--gc); color: #fff; }
+.steps li.paid::before { border-color: var(--paid); color: var(--paid); background: var(--paid-bg); border-width: 2px; }
+.steps .t { font-weight: 650; font-size: 13.5px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.steps .d { color: var(--text2); font-size: 13px; margin-top: 1px; }
+.steps .chips { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+.money { font: 600 10.5px var(--sans); color: var(--paid); background: var(--paid-bg); border-radius: 999px; padding: 0 8px; }
+
+@media (max-width: 760px) {
+  h1 { font-size: 23px; }
+  .card { padding: 16px; }
+  .tree-row { grid-template-columns: 1fr; gap: 4px; padding: 8px 12px; }
+}
+</style>
+</head>
+<body>
+<main>
+<p class="eyebrow">Technical Knowledge Assistant · command overview</p>
+<h1>How the <code>tka</code> commands fit together</h1>
+<p class="lede">Every command in <code>tka --help</code>: where its data comes from, where it goes, which file holds the code, and what each step touches. State of the code on 17 November 2026, evening.</p>
+
+<nav>
+  <a href="#overview">The flow</a>
+  <a href="#tree">Files</a>
+  <a href="#matrix">What touches what</a>
+  <a href="#commands">Every command, step by step</a>
+</nav>
+
+<section class="card" id="overview">
+  <div class="card-head">
+    <h2>The flow</h2>
+    <div class="filter" role="group" aria-label="Highlight a part"></div>
+  </div>
+  <p class="what">Each white box with <code>tka</code> in front is a command you type: click it to jump to its steps. Under a filter, a command that the part only reuses (through its code) stays half visible. Grey arrows show where data goes; green dashed arrows show a command that runs the code of another one. The purple labels are the outside services a box calls. The filter highlights one part here, in the file tree, the table and the command list.</p>
+  <div class="chart-scroll"><svg id="chart" viewBox="0 0 1200 852" role="img" aria-label="Flowchart of the tka commands"></svg></div>
+</section>
+
+<section class="card" id="tree">
+  <div class="card-head"><h2>Which file belongs to which part</h2></div>
+  <p class="what">The code in <code>src/tka/</code> and the data it reads and writes. A file used by more than one part shows every part. <code>cli.py</code> and <code>config.py</code> serve all of them.</p>
+  <div class="tree" id="tree-rows"></div>
+</section>
+
+<section class="card" id="matrix">
+  <div class="card-head"><h2>What touches what</h2></div>
+  <p class="what">One row per file or service, one column per command. <span class="cell r">R</span> reads, <span class="cell w">W</span> writes, <span class="cell rw">R + W</span> both, <span class="cell c">call</span> calls the service. Empty: never touches it.</p>
+  <div class="scroll"><table id="table"></table></div>
+  <p class="guard"><b>The guardrail in one row:</b> the queries dataset is read by <code>split</code> (ids only) and by the three evaluation runs. <code>index</code>, <code>search</code> and <code>ask</code> never read it, so nothing from it can reach the index, the prompt or an answer.</p>
+</section>
+
+<section id="commands"></section>
+</main>
+
+<script>
+// ---------- data ----------
+const GROUPS = {
+  build: { name: "Build the index", about: "Get the data, and get the searchable database: download it ready-made or build it yourself." },
+  answer: { name: "Search & answer", about: "Use the index. Never reads the queries dataset." },
+  evaluate: { name: "Evaluate", about: "Measure retrieval and answers against the official labels." },
+  report: { name: "Report", about: "Turn the saved runs of one split into one HTML page. Free: no API calls, no database." },
+};
+
+// chip kinds: corpus | queries | repo | api.  step type: input | code | paid | out.
+const FLOWS = [
+  { id: "download-database", g: "build", cmd: "tka download database", what: "Get the full index ready-made, so no one has to embed the corpus again.", steps: [
+    { type: "input", t: "tka download database", d: "No options." },
+    { type: "code", t: "Stop if it is there", d: "If <code>data/tka.db</code> already exists, it stops, also when it is an empty one made by <code>tka setup</code>. Known issue: the message says to run <code>tka setup --clean</code>, but that creates a new empty file straight away." },
+    { type: "code", t: "Download from the GitHub Release", d: "About 700 MB, into a <code>.part</code> file that is renamed at the end, so a broken-off download never looks like a finished database.",
+      r: [["api", "calls", "GitHub Release"], ["corpus", "writes", "data/tka.db"]] },
+    { type: "out", t: "Ready", d: "Prints the path and size. <code>search</code> and <code>ask</code> work straight away: no <code>setup</code>, no <code>index</code>." },
+  ]},
+  { id: "download-datasets", g: "build", cmd: "tka download datasets", what: "Get the two FreshStack datasets: needed for the evaluation and to build the index yourself.", steps: [
+    { type: "input", t: "tka download datasets", d: "No options." },
+    { type: "code", t: "Fetch two parquet files", d: "Pinned to fixed dataset commits, so a later update of the dataset cannot change our data.",
+      r: [["api", "calls", "Hugging Face Hub"], ["corpus", "writes", "data/raw/corpus/ (49,514 rows)"], ["queries", "writes", "data/raw/queries/ (203 questions)"]] },
+    { type: "out", t: "Check", d: "Prints the row count and size of both files and flags a count that differs from what we expect." },
+  ]},
+  { id: "setup", g: "build", cmd: "tka setup", what: "Create the empty database.", steps: [
+    { type: "input", t: "tka setup", d: "<code>--clean</code> deletes the database first, after you type \"delete\"." },
+    { type: "code", t: "Create three tables", d: "<code>documents</code> (id, text, url, byte range), <code>documents_fts</code> (keyword index, BM25) and <code>documents_vec</code> (vectors). Linked by rowid. Safe to rerun.",
+      r: [["corpus", "writes", "data/tka.db"]] },
+    { type: "out", t: "Report", d: "Prints how many documents the database holds." },
+  ]},
+  { id: "index", g: "build", cmd: "tka index", what: "Fill the database: one embedding per corpus row (flat index, no extra chunking).", steps: [
+    { type: "input", t: "tka index", d: "<code>--limit N</code> indexes only N new rows, for a trial run." },
+    { type: "code", t: "Read the corpus rows", d: "9 duplicate ids are dropped: 49,505 rows remain.", r: [["corpus", "reads", "data/raw/corpus/"]] },
+    { type: "code", t: "Skip what is done", d: "Rows already in the database are skipped, so a run continues where the last one stopped and no row is embedded twice.", r: [["corpus", "reads", "data/tka.db"]] },
+    { type: "code", t: "Clean", d: "Long base64 runs (images in notebooks) become a short placeholder. A row that was only base64 is stored but not searchable." },
+    { type: "paid", t: "Embed", d: "Batches of 96 texts, Cohere <code>embed-v5.0-pro</code>, 2048 numbers per text.", r: [["api", "calls", "Cohere Embed"]] },
+    { type: "out", t: "Store", d: "Each row goes into the three tables under one rowid, saved after every batch.", r: [["corpus", "writes", "data/tka.db"]] },
+  ], note: "<b>Never reads the queries dataset.</b>" },
+  { id: "search", g: "answer", half: "evaluate", cmd: "tka search", what: "The bare index search: shows the retrieved documents, no answer. The same search runs inside <code>ask</code> and <code>tka evaluation retrieval</code>.", steps: [
+    { type: "input", t: "tka search \"question\"", d: "<code>--mode</code> keyword, semantic or hybrid (default). <code>--k</code> for how many." },
+    { type: "paid", t: "Embed the question", d: "Live, every time. No cache here. Not in keyword mode, which needs no vector.", r: [["api", "calls", "Cohere Embed"]] },
+    { type: "code", t: "Two searches", d: "Hybrid (the default): keyword (BM25) gives the best 50, semantic (vectors) the best 200.", r: [["corpus", "reads", "data/tka.db"]] },
+    { type: "code", t: "Fuse", d: "Each list is scaled to 0..1, then 0.7 x semantic + 0.3 x keyword. The best 10 remain." },
+    { type: "out", t: "Show", d: "Rank, score, corpus id and GitHub url of each document." },
+  ], note: "<b>Never reads the queries dataset.</b>" },
+  { id: "ask", g: "answer", half: "evaluate", cmd: "tka ask", what: "The assistant: one retrieval, then one Claude call that answers from the retrieved documents. Steps 2 to 6 are the function <code>answer()</code> in <code>answer.py</code>, which <code>tka evaluation answers</code> runs too.", steps: [
+    { type: "input", t: "Two ways in", d: "<code>tka ask \"question\"</code> answers once and stops. <code>tka ask</code> opens a prompt and keeps asking until you type <code>exit</code>. Every question stands alone: no history. <code>--model</code> picks another Claude model; <code>--details</code> also shows the statements with their document ids." },
+    { type: "code", t: "Gate", d: "A question without a letter or digit gets a fixed message. No search, no paid call." },
+    { type: "paid", t: "Retrieve", d: "The same hybrid search as <code>tka search</code>: the best 10 documents, with their text and url.", r: [["api", "calls", "Cohere Embed (the question)"], ["corpus", "reads", "data/tka.db"]] },
+    { type: "code", t: "Build the message", d: "The 10 documents first, each with its number and id. Then the question in its own tag. The rules come from the system prompt.", r: [["repo", "reads", "src/tka/prompts/answer-system-prompt.md"]] },
+    { type: "paid", t: "One Claude call", d: "Sonnet 5.5, effort medium. The reply is forced into JSON: <code>outcome</code>, <code>answer</code>, <code>citations</code>.", r: [["api", "calls", "Anthropic"]] },
+    { type: "code", t: "Check", d: "Sources are taken from the cited ids. Rules that every answer must keep are checked; broken ones are stored as <code>violations</code>. A declined request gets a short message." },
+    { type: "out", t: "Show", d: "The answer as Markdown, the sources with id and url, and one line with outcome, tokens and seconds. With the prompt open: back to step 1." },
+  ], note: "<b>Never reads the queries dataset.</b> Nothing is saved to disk." },
+  { id: "split", g: "evaluate", cmd: "tka split", what: "Divide the 203 evaluation questions once into a part for tuning and a part for the final run.", steps: [
+    { type: "input", t: "tka split", d: "Refuses to run when the split already exists." },
+    { type: "code", t: "Read the question ids", d: "Only the ids. Nothing else from the queries is read or stored here.", r: [["queries", "reads", "data/raw/queries/ (ids only)"]] },
+    { type: "code", t: "Shuffle", d: "Sorted first, then shuffled with seed 42, so the result is always the same." },
+    { type: "out", t: "Write the split", d: "68 dev questions (tuning) and 135 test questions (run once at the end).", r: [["repo", "writes", "splits/split.json"]] },
+  ]},
+  { id: "evaluation-retrieval", g: "evaluate", cmd: "tka evaluation retrieval", what: "Measure the search alone, against the official labels. No answers, no Claude.", steps: [
+    { type: "input", t: "tka evaluation retrieval", d: "<code>--split</code> dev or test (test asks you to type \"test\"). <code>--limit N</code> for a trial that writes no results file (missing question vectors are still added to the cache)." },
+    { type: "code", t: "Load the questions", d: "The questions of the split. Search text = title + body. Per nugget: the ids of the documents that support it.", r: [["queries", "reads", "data/raw/queries/"], ["repo", "reads", "splits/split.json"]] },
+    { type: "code", t: "Question vectors", d: "Read from the cache. Only a question that is not in it yet is embedded and added.", r: [["repo", "reads + writes", "splits/question_cache.json"], ["api", "calls", "Cohere Embed (missing ones only)"]] },
+    { type: "code", t: "Search three ways", d: "Keyword, semantic and hybrid with <code>search()</code> from <code>retrieval.py</code>, the best 50 of each, for every question.", r: [["corpus", "reads", "data/tka.db"]] },
+    { type: "code", t: "Score", d: "Recall@50, Coverage@20 and alpha-nDCG@10: how many labelled documents and nuggets the search found." },
+    { type: "out", t: "Report", d: "Prints the table of averages and saves every score.", r: [["repo", "writes", "results/retrieval-&lt;split&gt;-&lt;date&gt;.json"]] },
+  ]},
+  { id: "evaluation-answers", g: "evaluate", cmd: "tka evaluation answers", what: "Run the evaluation questions through the assistant and save every answer. No judging yet.", steps: [
+    { type: "input", t: "tka evaluation answers", d: "<code>--split</code> dev or test. <code>--limit N</code> for a trial (saved too). <code>--resume file</code> continues a run that stopped." },
+    { type: "code", t: "Load the questions", d: "As in the retrieval run: search text and, per nugget, the supporting document ids.", r: [["queries", "reads", "data/raw/queries/"], ["repo", "reads", "splits/split.json"]] },
+    { type: "code", t: "Question vectors", d: "From the same cache, so normally no embedding call at all.", r: [["repo", "reads + writes", "splits/question_cache.json"], ["api", "calls", "Cohere Embed (missing ones only)"]] },
+    { type: "paid", t: "Answer each question", d: "<code>answer()</code>, the engine of <code>tka ask</code> (its steps 2 to 6). It gets the question text and its cached vector, nothing else.", r: [["corpus", "reads", "data/tka.db"], ["repo", "reads", "src/tka/prompts/answer-system-prompt.md"], ["api", "calls", "Anthropic"]] },
+    { type: "code", t: "Free numbers", d: "Per nugget: was a supporting document among the 10? Plus outcome counts, violations, tokens, cost and seconds. From the labels, no LLM." },
+    { type: "out", t: "Save", d: "The file is rewritten after every question, so a stopped run loses nothing.", r: [["repo", "writes", "results/answers-&lt;split&gt;-&lt;date&gt;.json"]] },
+  ], note: "<b>Where the queries dataset stops:</b> the nuggets and the reference answers stay in the evaluation code. The assistant in step 4 only receives the question text." },
+  { id: "evaluation-judge", g: "evaluate", cmd: "tka evaluation judge", what: "Judge the saved answers of an answer run. Reads a file, so judging never pays for the answers again.", steps: [
+    { type: "input", t: "tka evaluation judge &lt;answers file&gt;", d: "<code>--limit N</code> for a trial (saved too). <code>--resume file</code> continues a run; refused when the model or prompts differ." },
+    { type: "code", t: "Load", d: "The saved answers, and per question the nugget texts and the reference answer.", r: [["repo", "reads", "results/answers-...json"], ["queries", "reads", "data/raw/queries/ (nuggets, reference answer)"], ["repo", "reads", "splits/split.json"]] },
+    { type: "code", t: "Skip what was not answered", d: "An answer whose outcome is not <code>answered</code> gets no calls: all its nuggets count as <code>none</code>." },
+    { type: "paid", t: "Call 1: nuggets", d: "Sees the question, the answer, the numbered nuggets and the reference answer; no documents. Per nugget <code>full</code>, <code>partial</code> or <code>none</code>, and whether the answer helps the person who asked.", r: [["repo", "reads", "prompts/judge-nuggets-prompt.md"], ["api", "calls", "Anthropic"]] },
+    { type: "paid", t: "Call 2: support", d: "Sees the cited documents in full, the statements, the answer and the question. Per statement <code>supported</code>, <code>partly</code> or <code>not_supported</code>, plus claims without a source.", r: [["corpus", "reads", "data/tka.db (cited documents)"], ["repo", "reads", "prompts/judge-support-prompt.md"], ["api", "calls", "Anthropic"]] },
+    { type: "code", t: "Combine", d: "Per nugget the verdict next to what the answer run knows: was a labelled document retrieved? Totals: nugget score strict and lenient, statement verdicts, cost." },
+    { type: "out", t: "Save", d: "Rewritten after every answer. An API error or an unfinished reply stops the run with the resume command.", r: [["repo", "writes", "results/judge-&lt;split&gt;-&lt;date&gt;.json"]] },
+  ], note: "<b>The judge is evaluation only:</b> it sees nuggets and reference answers; the assistant never does." },
+  { id: "report", g: "report", cmd: "tka report", what: "Make one HTML report of the saved evaluation runs of a split.", steps: [
+    { type: "input", t: "tka report", d: "<code>--split</code> dev or test (default dev). Free: no API calls, no database." },
+    { type: "code", t: "Find the runs", d: "The newest retrieval and judge file of the split, and the answers file the judge names.", r: [["repo", "reads", "results/"]] },
+    { type: "code", t: "Count", d: "Every quality number is counted from the per-question data, not taken from the summaries in the files. Cost and seconds per question do come from the summaries." },
+    { type: "code", t: "Fill the page", d: "The numbers go as JSON into the one placeholder of the template.", r: [["repo", "reads", "src/tka/templates/report.html"]] },
+    { type: "out", t: "Write", d: "One self-contained page to open in a browser.", r: [["repo", "writes", "reports/report-&lt;split&gt;.html"]] },
+  ]},
+];
+
+// The matrix: one row per file or service, one cell per command (in the order of FLOWS)
+//                                           dl db   dl ds   setup  index    search  ask     split    retr      answers   judge    report
+const MATRIX = [
+  ["api", "GitHub Release",                  ["call", "", "", "", "", "", "", "", "", "", ""]],
+  ["api", "Hugging Face Hub",                ["", "call", "", "", "", "", "", "", "", "", ""]],
+  ["corpus", "data/raw/corpus/",             ["", "W", "", "R", "", "", "", "", "", "", ""]],
+  ["queries", "data/raw/queries/",           ["", "W", "", "", "", "", "R ids", "R", "R", "R", ""]],
+  ["corpus", "data/tka.db",                  ["W", "", "W", "R + W", "R", "R", "", "R", "R", "R", ""]],
+  ["repo", "splits/split.json",              ["", "", "", "", "", "", "W", "R", "R", "R", ""]],
+  ["repo", "splits/question_cache.json",     ["", "", "", "", "", "", "", "R + W", "R + W", "", ""]],
+  ["repo", "prompts/answer-system-prompt.md", ["", "", "", "", "", "R", "", "", "R", "", ""]],
+  ["repo", "prompts/judge-*-prompt.md",      ["", "", "", "", "", "", "", "", "", "R", ""]],
+  ["repo", "results/",                       ["", "", "", "", "", "", "", "W", "R + W", "R + W", "R"]],
+  ["repo", "templates/report.html",          ["", "", "", "", "", "", "", "", "", "", "R"]],
+  ["repo", "reports/",                       ["", "", "", "", "", "", "", "", "", "", "W"]],
+  ["api", "Cohere Embed",                    ["", "", "", "call", "call", "call", "", "if missing", "if missing", "", ""]],
+  ["api", "Anthropic (Claude)",              ["", "", "", "", "", "call", "", "", "call", "call", ""]],
+];
+
+// [tree prefix, name, row type, parts, description]
+const TREE = [
+  ["", "src/tka/", "folder", "all", "The package: one module per step"],
+  ["├─ ", "cli.py", "", "all", "The <code>tka</code> command: one thin wrapper per subcommand"],
+  ["├─ ", "config.py", "", "all", "All paths and settings; nothing is hard-coded elsewhere"],
+  ["├─ ", "download.py", "", "build", "<code>tka download database</code> (GitHub Release) and <code>tka download datasets</code> (Hugging Face)"],
+  ["├─ ", "database.py", "", "build answer evaluate", "<code>tka setup</code>, and opening the database for every later step"],
+  ["├─ ", "ingest.py", "", "build", "<code>tka index</code>: rows, embeddings, storing"],
+  ["├─ ", "embedding.py", "", "build answer evaluate", "Cohere: the corpus rows for the index, the question for every search"],
+  ["├─ ", "retrieval.py", "", "answer evaluate", "<code>tka search</code>, and the search inside <code>answer()</code> and the retrieval evaluation"],
+  ["├─ ", "answer.py", "", "answer evaluate", "<code>answer()</code>: one search, one Claude call, returns one dict and prints nothing"],
+  ["├─ ", "ask.py", "", "answer", "<code>tka ask</code>: the terminal side (spinner, Markdown, sources)"],
+  ["├─ ", "prompts/", "folder", "answer evaluate", ""],
+  ["│  ├─ ", "answer-system-prompt.md", "", "answer evaluate", "The rules Claude answers by"],
+  ["│  ├─ ", "judge-nuggets-prompt.md", "", "evaluate", "Judge call 1: which nuggets are in the answer, and does it help?"],
+  ["│  └─ ", "judge-support-prompt.md", "", "evaluate", "Judge call 2: do the cited documents back each statement?"],
+  ["├─ ", "templates/", "folder", "report", ""],
+  ["│  └─ ", "report.html", "", "report", "The report page; <code>tka report</code> fills in the numbers"],
+  ["├─ ", "split.py", "", "evaluate", "<code>tka split</code>"],
+  ["├─ ", "evaluation_questions.py", "", "evaluate", "Loads the questions of a split; keeps their vectors in the cache. Shared by the three runs"],
+  ["├─ ", "evaluation_retrieval.py", "", "evaluate", "<code>tka evaluation retrieval</code>"],
+  ["├─ ", "evaluation_answers.py", "", "evaluate", "<code>tka evaluation answers</code>"],
+  ["├─ ", "evaluation_judge.py", "", "evaluate", "<code>tka evaluation judge</code>: two Claude calls per answer"],
+  ["└─ ", "evaluation_report.py", "", "report", "<code>tka report</code>: collects the numbers from <code>results/</code>"],
+  ["", "data/", "folder", "build answer evaluate", "Not in git"],
+  ["├─ ", "raw/corpus/", "", "build", "49,514 corpus rows (parquet)"],
+  ["├─ ", "raw/queries/", "", "build evaluate", "203 questions with nuggets and reference answers: evaluation only"],
+  ["└─ ", "tka.db", "", "build answer evaluate", "Downloaded ready-made, or built by <code>setup</code> and <code>index</code>; read by search, ask and the evaluation"],
+  ["", "splits/", "folder", "evaluate", "Committed"],
+  ["├─ ", "split.json", "", "evaluate", "68 dev and 135 test question ids"],
+  ["└─ ", "question_cache.json", "", "evaluate", "Question vectors, so an evaluation run rarely embeds"],
+  ["", "results/", "folder", "evaluate report", "Committed: one JSON file per evaluation run"],
+  ["", "reports/", "folder", "report", "One HTML page per split: <code>report-dev.html</code>, <code>report-test.html</code>"],
+];
+
+// ---------- helpers ----------
+const el = (tag, cls, html) => { const n = document.createElement(tag); if (cls) n.className = cls; if (html !== undefined) n.innerHTML = html; return n; };
+const NS = "http://www.w3.org/2000/svg";
+function s(tag, attrs, parent) {
+  const n = document.createElementNS(NS, tag);
+  for (const k in attrs) n.setAttribute(k, attrs[k]);
+  if (parent) parent.append(n);
+  return n;
+}
+function txt(parent, x, y, str, cls, anchor = "middle") {
+  const t = s("text", { x, y, class: cls, "text-anchor": anchor }, parent);
+  t.textContent = str;
+  return t;
+}
+const COLOR = { build: "var(--build)", answer: "var(--answer)", evaluate: "var(--eval)", report: "var(--report)", repo: "var(--repo)" };
+const TINT = { build: "var(--build-bg)", answer: "var(--answer-bg)", evaluate: "var(--eval-bg)", report: "var(--report-bg)", repo: "var(--repo-bg)" };
+
+// orthogonal path with rounded corners
+function roundedPath(p, r = 9) {
+  let d = `M${p[0][0]},${p[0][1]}`;
+  for (let i = 1; i < p.length - 1; i++) {
+    const [x0, y0] = p[i - 1], [x1, y1] = p[i], [x2, y2] = p[i + 1];
+    const d1 = Math.hypot(x1 - x0, y1 - y0), d2 = Math.hypot(x2 - x1, y2 - y1);
+    const rr = Math.min(r, d1 / 2, d2 / 2);
+    d += ` L${x1 - (x1 - x0) / d1 * rr},${y1 - (y1 - y0) / d1 * rr} Q${x1},${y1} ${x1 + (x2 - x1) / d2 * rr},${y1 + (y2 - y1) / d2 * rr}`;
+  }
+  const last = p[p.length - 1];
+  return d + ` L${last[0]},${last[1]}`;
+}
+
+// a row of pill badges centred on cx
+function badges(parent, list, cx, y) {
+  const gap = 5;
+  const items = list.map(([kind, label]) => {
+    const g = s("g", { class: "badge b-" + kind }, parent);
+    const r = s("rect", { y, height: 15, rx: 7.5 }, g);
+    const t = s("text", { y: y + 10.6, "text-anchor": "middle" }, g);
+    t.textContent = label;
+    return { r, t, w: t.getComputedTextLength() + 14 };
+  });
+  const total = items.reduce((a, i) => a + i.w, 0) + gap * (items.length - 1);
+  let x = cx - total / 2;
+  for (const i of items) { i.r.setAttribute("x", x); i.r.setAttribute("width", i.w); i.t.setAttribute("x", x + i.w / 2); x += i.w + gap; }
+}
+
+// ---------- shapes ----------
+function cmdNode(svg, n) {
+  const wrap = s("a", { href: "#" + n.link, "data-g": n.g }, svg);
+  if (n.half) wrap.dataset.half = n.half;
+  const g = s("g", { class: "cmd" }, wrap);
+  const col = COLOR[n.color || n.g.split(" ")[0]];
+  s("rect", { class: "shadow", x: n.x + 1, y: n.y + 3, width: n.w, height: n.h, rx: 11, fill: col }, g);
+  s("rect", { class: "box", x: n.x, y: n.y, width: n.w, height: n.h, rx: 11, stroke: col }, g);
+  const cx = n.x + n.w / 2;
+  // the title reads as what you type: a grey "tka" before the command
+  const title = s("text", { x: cx, y: n.y + 22, class: "n-title", "text-anchor": "middle" }, g);
+  s("tspan", { class: "n-tka" }, title).textContent = "tka ";
+  s("tspan", {}, title).textContent = n.title;
+  if (n.sub) txt(g, cx, n.y + 38, n.sub, "n-sub");
+  if (n.sub2) txt(g, cx, n.y + 52, n.sub2, "n-sub");
+  if (n.badges) badges(g, n.badges, cx, n.y + n.h - 21);
+  if (n.paid) {
+    const c = s("g", { class: "coin" }, g);
+    s("circle", { cx: n.x + n.w - 3, cy: n.y + 3, r: 9 }, c);
+    txt(c, n.x + n.w - 3, n.y + 7, "$", "");
+  }
+}
+
+function storeNode(svg, n) {
+  const g = s("g", { "data-g": n.g }, svg);
+  const ry = n.ry || 8, { x, y, w, h } = n, col = COLOR[n.kind], tint = TINT[n.kind];
+  const dash = n.ghost ? { "stroke-dasharray": "4 3" } : {};
+  s("path", { d: `M${x},${y + ry} V${y + h - ry} A${w / 2},${ry} 0 0 0 ${x + w},${y + h - ry} V${y + ry} Z`, fill: tint, stroke: col, "stroke-width": 1.4, ...dash }, g);
+  s("ellipse", { cx: x + w / 2, cy: y + ry, rx: w / 2, ry, fill: "var(--surface)", stroke: col, "stroke-width": 1.4, ...dash }, g);
+  const cx = x + w / 2, ty = y + (n.ty || 2 * ry + 17);
+  txt(g, cx, ty, n.title, "n-file");
+  if (n.sub) txt(g, cx, ty + 15, n.sub, "n-sub");
+  if (n.sub2) txt(g, cx, ty + 29, n.sub2, "n-sub");
+  if (n.sub3) txt(g, cx, ty + 43, n.sub3, "n-sub");
+}
+
+function docNode(svg, n) {
+  const g = s("g", { "data-g": n.g }, svg);
+  const { x, y, w, h } = n, f = 11;
+  s("path", { d: `M${x + 6},${y} H${x + w - f} L${x + w},${y + f} V${y + h - 6} Q${x + w},${y + h} ${x + w - 6},${y + h} H${x + 6} Q${x},${y + h} ${x},${y + h - 6} V${y + 6} Q${x},${y} ${x + 6},${y} Z`,
+    fill: "var(--repo-bg)", stroke: "var(--repo)", "stroke-width": 1.3 }, g);
+  s("path", { d: `M${x + w - f},${y} V${y + f} H${x + w}`, fill: "none", stroke: "var(--repo)", "stroke-width": 1.3 }, g);
+  const cx = x + w / 2;
+  txt(g, cx, y + h / 2 - 2, n.title, "n-file");
+  if (n.sub) txt(g, cx, y + h / 2 + 13, n.sub, "n-sub");
+}
+
+function outNode(svg, n) {
+  const g = s("g", { "data-g": n.g }, svg);
+  s("rect", { x: n.x, y: n.y, width: n.w, height: n.h, rx: n.h / 2, fill: "var(--sunk)", stroke: "var(--border2)", "stroke-width": 1.3, "stroke-dasharray": "4 3" }, g);
+  const cx = n.x + n.w / 2;
+  txt(g, cx, n.y + 16, n.top || "on screen", "n-small");
+  txt(g, cx, n.y + 31, n.title, "n-sub").style.fill = "var(--text)";
+}
+
+function funcNode(svg, n) {
+  const g = s("g", { "data-g": n.g }, svg);
+  s("rect", { x: n.x, y: n.y, width: n.w, height: n.h, rx: 8, fill: "var(--eval-bg)", stroke: "var(--eval)", "stroke-width": 1.2 }, g);
+  const cx = n.x + n.w / 2;
+  txt(g, cx, n.y + 23, n.title, "n-sub").style.cssText = "font-weight:650;font-size:12px;fill:var(--text)";
+  txt(g, cx, n.y + 40, n.sub, "n-mono");
+}
+
+function resultsNode(svg, n) {
+  const g = s("g", { "data-g": n.g }, svg);
+  const { x, y, w, h } = n;
+  s("path", { d: `M${x},${y + 14} V${y + h - 8} Q${x},${y + h} ${x + 8},${y + h} H${x + w - 8} Q${x + w},${y + h} ${x + w},${y + h - 8} V${y + 20} Q${x + w},${y + 12} ${x + w - 8},${y + 12} H${x + 110} L${x + 100},${y} H${x + 8} Q${x},${y} ${x},${y + 8} Z`,
+    fill: "var(--repo-bg)", stroke: "var(--repo)", "stroke-width": 1.3 }, g);
+  txt(g, x + 14, y + 27, "results/", "n-file", "start");
+  txt(g, x + w - 14, y + 27, "committed", "n-small", "end");
+  for (const [cy, label] of n.rows) {
+    s("rect", { x: x + 12, y: cy - 14, width: w - 24, height: 28, rx: 6, fill: "var(--surface)", stroke: "var(--border2)" }, g);
+    txt(g, x + 24, cy + 4, label, "n-mono", "start");
+  }
+}
+
+function edge(svg, e) {
+  const g = s("g", { "data-g": e.g }, svg);
+  if (e.half) g.dataset.half = e.half;
+  const attrs = { d: e.d || roundedPath(e.p), class: "edge" + (e.uses ? " uses" : ""), "marker-end": e.uses ? "url(#arrow-uses)" : "url(#arrow)" };
+  if (e.both) attrs["marker-start"] = "url(#arrow)";
+  s("path", attrs, g);
+  if (e.label) txt(g, e.label[1], e.label[2], e.label[0], "e-label" + (e.uses ? " uses" : ""), e.label[3] || "middle");
+}
+
+// ---------- the chart ----------
+const LANES = [
+  { g: "build", y: 16, h: 202 },
+  { g: "answer", y: 230, h: 150 },
+  { g: "evaluate", y: 392, h: 308 },
+  { g: "report", y: 712, h: 130 },
+];
+
+const EDGES = [
+  // build
+  { g: "build", p: [[226, 60], [666, 60]], label: ["ready-made: no setup or index needed", 446, 52] },
+  { g: "build", p: [[226, 168], [266, 168]] },
+  { g: "build", p: [[416, 168], [456, 168]] },
+  { g: "build", p: [[606, 103], [666, 103]] },
+  { g: "build", p: [[606, 168], [666, 168]] },
+  { g: "build evaluate", p: [[141, 200], [141, 500]] },
+  // search & answer
+  { g: "answer", half: "evaluate", p: [[718, 203], [718, 252], [480, 252], [480, 272]] },
+  { g: "answer", half: "evaluate", p: [[790, 203], [790, 252], [895, 252], [895, 272]] },
+  { g: "answer", p: [[570, 312], [590, 312]] },
+  { g: "answer", p: [[990, 312], [1012, 312]] },
+  // evaluate: questions
+  { g: "evaluate", p: [[226, 520], [246, 520], [246, 443], [266, 443]], label: ["ids only", 252, 497, "start"] },
+  { g: "evaluate", p: [[226, 550], [436, 550]], label: ["questions + nuggets", 331, 543] },
+  { g: "evaluate", p: [[396, 443], [436, 443]] },
+  { g: "evaluate", p: [[516, 468], [516, 510]] },
+  { g: "evaluate", p: [[416, 624], [516, 624], [516, 568]], both: true, label: ["vectors", 466, 617] },
+  { g: "evaluate", p: [[606, 539], [626, 539], [626, 450], [650, 450]] },
+  { g: "evaluate", p: [[606, 539], [650, 539]] },
+  { g: "evaluate", p: [[606, 539], [626, 539], [626, 635], [650, 635]] },
+  // evaluate: runs the code of search and ask
+  { g: "evaluate", uses: true, p: [[480, 352], [480, 406], [700, 406], [700, 418]], label: ["search()", 590, 401] },
+  { g: "evaluate", uses: true, d: "M866,352 V444 A6,6 0 0 1 866,456 V512 Q866,520 858,520 H850", label: ["answer()", 860, 404, "end"] },
+  // evaluate: the judge reads the database itself
+  { g: "evaluate", p: [[606, 662], [650, 662]] },
+  // evaluate: into and out of results/
+  { g: "evaluate", p: [[850, 450], [912, 450]] },
+  { g: "evaluate", p: [[850, 546], [912, 546]] },
+  { g: "evaluate", p: [[912, 560], [884, 560], [884, 616], [850, 616]] },
+  { g: "evaluate", p: [[850, 650], [912, 650]] },
+  // report
+  { g: "report", p: [[1040, 688], [1040, 736], [650, 736], [650, 760]], label: ["the newest runs of one split", 845, 730] },
+  { g: "report", p: [[510, 792], [560, 792]] },
+  { g: "report", p: [[740, 792], [790, 792]] },
+  { g: "report", p: [[1000, 792], [1030, 792]] },
+];
+
+function drawChart() {
+  const svg = document.getElementById("chart");
+  svg.textContent = "";
+  const defs = s("defs", {}, svg);
+  for (const [id, fill] of [["arrow", "var(--edge)"], ["arrow-uses", "var(--answer)"]]) {
+    const m = s("marker", { id, viewBox: "0 0 10 10", refX: 9, refY: 5, markerWidth: 7, markerHeight: 7, orient: "auto-start-reverse" }, defs);
+    s("path", { d: "M0,0 L10,5 L0,10 L2.5,5 Z", fill }, m);
+  }
+
+  // lanes
+  for (const l of LANES) {
+    s("rect", { x: 10, y: l.y, width: 1180, height: l.h, rx: 14, fill: TINT[l.g], opacity: .45 }, svg);
+    s("rect", { x: 10, y: l.y, width: 34, height: l.h, rx: 14, fill: TINT[l.g] }, svg);
+    const cy = l.y + l.h / 2;
+    const t = txt(svg, 27, cy, GROUPS[l.g].name, "lane-label");
+    t.setAttribute("transform", `rotate(-90 27 ${cy})`);
+    t.setAttribute("dominant-baseline", "central");
+    t.style.fill = COLOR[l.g];
+  }
+
+  // short notes in the empty parts of two lanes
+  const note = (x, y, str, g, strong) => {
+    const t = txt(svg, x, y, str, "lane-text", "start");
+    t.setAttribute("data-g", g);
+    if (strong) t.style.cssText = `font-weight:650;fill:${COLOR[g]}`;
+  };
+  note(170, 296, "Search and answer from the index.", "answer");
+  note(170, 314, "Never reads the queries dataset.", "answer", true);
+  note(62, 784, "One page per split.", "report");
+  note(62, 802, "Free: no API calls, no database.", "report", true);
+
+  for (const e of EDGES) edge(svg, e);
+
+  // build lane
+  cmdNode(svg, { g: "build", link: "download-database", x: 56, y: 28, w: 170, h: 64, title: "download database", sub: "the full index, about 700 MB", badges: [["api", "GitHub Release"]] });
+  cmdNode(svg, { g: "build", link: "download-datasets", x: 56, y: 136, w: 170, h: 64, title: "download datasets", sub: "corpus + queries, pinned", badges: [["api", "Hugging Face"]] });
+  storeNode(svg, { g: "build", kind: "build", x: 266, y: 134, w: 150, h: 68, title: "data/raw/corpus/", sub: "49,514 rows" });
+  cmdNode(svg, { g: "build", link: "setup", x: 456, y: 80, w: 150, h: 46, title: "setup", sub: "creates the 3 tables" });
+  cmdNode(svg, { g: "build", link: "index", x: 456, y: 136, w: 150, h: 64, title: "index", sub: "one vector per row", badges: [["api", "Cohere"]], paid: true });
+  storeNode(svg, { g: "build answer evaluate", kind: "build", x: 666, y: 34, w: 170, h: 170, ty: 100, title: "data/tka.db", sub: "SQLite + sqlite-vec", sub2: "documents · FTS5 · vectors", sub3: "linked by rowid" });
+
+  // search & answer lane
+  cmdNode(svg, { g: "answer", half: "evaluate", link: "search", x: 390, y: 272, w: 180, h: 80, title: "search", sub: "hybrid: semantic + keyword", sub2: "the best 10 documents", badges: [["api", "Cohere"]], paid: true });
+  outNode(svg, { g: "answer", x: 590, y: 291, w: 130, h: 42, title: "10 documents" });
+  cmdNode(svg, { g: "answer", half: "evaluate", link: "ask", x: 800, y: 272, w: 190, h: 80, title: "ask", sub: "1 search + 1 Claude call", sub2: "system prompt · no history", badges: [["answer", "answer()"], ["api", "Cohere"], ["api", "Claude"]], paid: true });
+  outNode(svg, { g: "answer", x: 1012, y: 291, w: 168, h: 42, title: "answer + sources" });
+
+  // evaluate lane
+  storeNode(svg, { g: "build evaluate", kind: "evaluate", x: 56, y: 500, w: 170, h: 80, title: "data/raw/queries/", sub: "203 questions", sub2: "evaluation only" });
+  cmdNode(svg, { g: "evaluate", link: "split", x: 266, y: 418, w: 130, h: 50, title: "split", sub: "seed 42, run once" });
+  docNode(svg, { g: "evaluate", x: 436, y: 418, w: 160, h: 50, title: "splits/split.json", sub: "68 dev · 135 test" });
+  funcNode(svg, { g: "evaluate", x: 436, y: 510, w: 170, h: 58, title: "load questions", sub: "evaluation_questions.py" });
+  docNode(svg, { g: "evaluate", x: 266, y: 600, w: 150, h: 48, title: "question_cache.json", sub: "splits/ · vectors" });
+  storeNode(svg, { g: "evaluate", kind: "build", ghost: true, ry: 6, x: 536, y: 638, w: 70, h: 52, ty: 29, title: "tka.db", sub: "cited docs" });
+  cmdNode(svg, { g: "evaluate", link: "evaluation-retrieval", x: 650, y: 418, w: 200, h: 64, title: "evaluation retrieval", sub: "Recall · Coverage · nDCG", badges: [["api", "Cohere, misses only"]] });
+  cmdNode(svg, { g: "evaluate", link: "evaluation-answers", x: 650, y: 500, w: 200, h: 78, title: "evaluation answers", sub: "the assistant on every question", sub2: "+ free numbers from the labels", badges: [["answer", "answer()"], ["api", "Claude"]], paid: true });
+  cmdNode(svg, { g: "evaluate", link: "evaluation-judge", x: 650, y: 596, w: 200, h: 78, title: "evaluation judge", sub: "2 Claude calls per answer", sub2: "complete · helpful · backed", badges: [["api", "Claude"]], paid: true });
+  resultsNode(svg, { g: "evaluate report", x: 900, y: 400, w: 280, h: 288, rows: [[450, "retrieval-<split>-<date>.json"], [550, "answers-<split>-<date>.json"], [650, "judge-<split>-<date>.json"]] });
+
+  // report lane
+  docNode(svg, { g: "report", x: 330, y: 768, w: 180, h: 48, title: "templates/report.html", sub: "the page, without numbers" });
+  cmdNode(svg, { g: "report", link: "report", x: 560, y: 760, w: 180, h: 64, title: "report", sub: "counts the scores itself", sub2: "--split dev or test" });
+  docNode(svg, { g: "report", x: 790, y: 768, w: 210, h: 48, title: "reports/report-<split>.html", sub: "one self-contained page" });
+  outNode(svg, { g: "report", x: 1030, y: 771, w: 150, h: 42, top: "in a browser", title: "open the report" });
+
+  drawLegend(svg);
+  applyFilter(active);
+}
+
+function drawLegend(svg) {
+  const g = s("g", {}, svg);
+  s("rect", { x: 862, y: 28, width: 318, height: 176, rx: 10, fill: "var(--surface)", stroke: "var(--border)" }, g);
+  txt(g, 878, 52, "Legend", "n-small", "start");
+  const col1 = 878, col2 = 1032, rows = [80, 120, 160];
+  const item = (x, y, label) => txt(g, x + 42, y + 4, label, "n-sub", "start");
+  // command
+  s("rect", { x: col1, y: rows[0] - 10, width: 32, height: 20, rx: 5, fill: "var(--surface)", stroke: "var(--text2)", "stroke-width": 1.4 }, g);
+  txt(g, col1 + 16, rows[0] + 3.5, "tka", "n-tka").style.cssText = "font:400 9.5px var(--mono)";
+  item(col1, rows[0], "command, click it");
+  // uses
+  s("path", { d: `M${col2},${rows[0]} H${col2 + 30}`, class: "edge uses", "marker-end": "url(#arrow-uses)" }, g);
+  item(col2, rows[0], "runs its code");
+  // store
+  const sx = col1, sy = rows[1] - 11;
+  s("path", { d: `M${sx},${sy + 4} V${sy + 18} A16,4 0 0 0 ${sx + 32},${sy + 18} V${sy + 4} Z`, fill: "var(--build-bg)", stroke: "var(--build)", "stroke-width": 1.2 }, g);
+  s("ellipse", { cx: sx + 16, cy: sy + 4, rx: 16, ry: 4, fill: "var(--surface)", stroke: "var(--build)", "stroke-width": 1.2 }, g);
+  item(col1, rows[1], "data/, not in git");
+  // doc
+  const dx = col2 + 4, dy = rows[1] - 11;
+  s("path", { d: `M${dx},${dy} H${dx + 18} L${dx + 24},${dy + 6} V${dy + 22} H${dx} Z`, fill: "var(--repo-bg)", stroke: "var(--repo)", "stroke-width": 1.2 }, g);
+  item(col2, rows[1], "file in the repo");
+  // on screen
+  s("rect", { x: col1, y: rows[2] - 9, width: 32, height: 18, rx: 9, fill: "var(--sunk)", stroke: "var(--border2)", "stroke-width": 1.3, "stroke-dasharray": "4 3" }, g);
+  item(col1, rows[2], "what you see");
+  // paid
+  const c = s("g", { class: "coin" }, g);
+  s("circle", { cx: col2 + 16, cy: rows[2], r: 9 }, c);
+  txt(c, col2 + 16, rows[2] + 4, "$", "");
+  item(col2, rows[2], "paid API call");
+}
+
+// ---------- filter ----------
+let active = "all";
+function applyFilter(g) {
+  active = g;
+  document.querySelectorAll("[data-g]").forEach(n => {
+    const gs = n.dataset.g.split(" ");
+    const on = g === "all" || gs.includes(g) || gs.includes("all");
+    const half = !on && (n.dataset.half || "").split(" ").includes(g);  // reused by this part, not its own command
+    n.classList.toggle("dim", !on && !half);
+    n.classList.toggle("half", half);
+  });
+  document.querySelectorAll(".filter button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.f === g)));
+}
+const filter = document.querySelector(".filter");
+for (const key of ["all", "build", "answer", "evaluate", "report"]) {
+  const b = el("button", "", key === "all" ? "Everything" : `<span class="dot ${key}"></span>${GROUPS[key].name}`);
+  b.type = "button";
+  b.dataset.f = key;
+  b.addEventListener("click", () => applyFilter(key));
+  filter.append(b);
+}
+
+// ---------- file tree ----------
+const partLabel = { all: "all parts", build: "Build", answer: "Answer", evaluate: "Evaluate", report: "Report" };
+const treeBox = document.getElementById("tree-rows");
+for (const [pre, name, type, parts, desc] of TREE) {
+  const row = el("div", "tree-row" + (type ? " " + type : ""));
+  row.dataset.g = parts;
+  row.append(el("div", "path", `<span class="pre">${pre}</span><span class="name">${name}</span>`));
+  const p = el("div", "parts");
+  for (const part of parts.split(" ")) p.append(el("span", "part " + part, (part === "all" ? "" : `<span class="dot ${part}"></span>`) + partLabel[part]));
+  row.append(p, el("div", "desc", desc));
+  treeBox.append(row);
+}
+
+// ---------- matrix ----------
+const table = document.getElementById("table");
+const head = el("tr");
+head.append(el("th", "", ""));
+for (const f of FLOWS) {
+  const th = el("th", "", "<code>" + f.cmd.replace("tka ", "").replace(/^(evaluation|download) /, "$1<br>") + "</code>");
+  th.style.setProperty("--gc", COLOR[f.g]);
+  th.dataset.g = f.g;
+  if (f.half) th.dataset.half = f.half;
+  head.append(th);
+}
+table.append(head);
+for (const [kind, name, cells] of MATRIX) {
+  const tr = el("tr");
+  tr.append(el("td", "", '<span class="chip ' + kind + '">' + name + "</span>"));
+  cells.forEach((cell, i) => {
+    const td = el("td");
+    td.dataset.g = FLOWS[i].g;
+    if (FLOWS[i].half) td.dataset.half = FLOWS[i].half;
+    if (cell) {
+      const cls = cell === "R + W" ? "rw" : cell.startsWith("R") ? (kind === "queries" ? "q" : "r") : cell === "W" ? "w" : "c";
+      td.append(el("span", "cell " + cls, cell));
+    }
+    tr.append(td);
+  });
+  table.append(tr);
+}
+
+// ---------- command cards ----------
+const commands = document.getElementById("commands");
+const intro = el("div", "card", '<div class="card-head"><h2>Every command, step by step</h2></div><p class="what">Grouped by part. A numbered circle per step: amber is a paid API call, filled is the output. The chips say what each step reads, writes or calls.</p>');
+intro.append(el("div", "kinds", '<span class="chip corpus"><b>corpus data</b></span>the corpus and the database built from it' +
+  '<span class="chip queries"><b>queries dataset</b></span>evaluation only' +
+  '<span class="chip repo"><b>repo file</b></span>committed' +
+  '<span class="chip api"><b>outside service</b></span>GitHub, Hugging Face, Cohere, Anthropic'));
+commands.append(intro);
+for (const key of Object.keys(GROUPS)) {
+  const head = el("div", "group-head g-" + key, `<span class="bar"></span><div><h2>${GROUPS[key].name}</h2><p>${GROUPS[key].about}</p></div>`);
+  head.dataset.g = key;
+  const grid = el("div", "grid");
+  for (const f of FLOWS.filter(f => f.g === key)) {
+    const card = el("article", "card flow-card g-" + key);
+    card.id = f.id;
+    card.dataset.g = key;
+    if (f.half) card.dataset.half = f.half;
+    card.append(el("div", "card-head", `<h3>${f.cmd}</h3>`), el("p", "what", f.what));
+    const ol = el("ol", "steps");
+    for (const st of f.steps) {
+      const li = el("li", st.type);
+      li.append(el("div", "t", st.t + (st.type === "paid" ? '<span class="money">$ paid call</span>' : "")), el("div", "d", st.d));
+      if (st.r) {
+        const chips = el("div", "chips");
+        for (const [kind, verb, name] of st.r) chips.append(el("span", "chip " + kind, "<b>" + verb + "</b>" + name));
+        li.append(chips);
+      }
+      ol.append(li);
+    }
+    card.append(ol);
+    if (f.note) card.append(el("p", "guard", f.note));
+    grid.append(card);
+  }
+  commands.append(head, grid);
+}
+
+// draw the chart once the fonts are in, so the badges are measured with the right font
+drawChart();
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(drawChart);
+</script>
+</body>
+</html>

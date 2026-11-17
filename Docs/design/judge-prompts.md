@@ -22,7 +22,7 @@ What the prompt tries to do:
 - **Compare meaning, not wording.** The assistant writes from its documents, so it rarely uses the words of the nugget.
 - **Grade only what the answer says.** A fact the reader would have to look up does not count.
 - **Keep completeness and usefulness apart.** An answer that solves the problem in another way misses the nugget, but can still be helpful. That is why there is a separate `helpful` verdict.
-- **Not reward a polite refusal.** An answer that says "the documents do not cover this" is honest, but it is never graded as fully helpful.
+- **Not reward a polite refusal.** The prompt says that "the documents do not cover this" is honest, but does not solve the problem by itself. In practice an answer with such a sentence still gets `yes` when the rest of it solves the problem.
 
 What it deliberately does not see:
 
@@ -33,7 +33,7 @@ The reference answer is given as background, because a short nugget can be hard 
 
 ## Call 2: support
 
-This call checks for hallucination: does the assistant say things its sources do not back?
+This call checks whether the cited documents back what the answer says.
 
 What the prompt tries to do:
 
@@ -49,24 +49,21 @@ What it deliberately does not see:
 
 ## How the two calls are combined
 
-Code, not the judge, puts the results together. Per nugget it has two facts:
+Code, not the judge, puts the results together. Per nugget it saves two facts next to each other:
 
 - from the labels of the test set: was a supporting document among the ten retrieved?
-- from call 1: does the answer say the nugget?
+- from call 1: does the answer say the nugget (`full`, `partial` or `none`)?
 
-| Retrieved | In the answer | Meaning |
-|---|---|---|
-| yes | yes | found and used |
-| yes | no | found, but not used: the answer step missed it |
-| no | no | not found: the search missed it |
-| no | yes | in the answer without a labelled document: from an unlabelled document, or from the model's own knowledge |
+The report (`uv run tka report`) shows the verdicts split by the first fact. These are facts, not causes: a nugget that is missing from the answer although a supporting document was retrieved is not always a miss of the answer step. The label says the document is relevant for the nugget, not that it states the fact plainly for this user's case.
 
-Unsupported statements and claims from call 2 are counted next to these.
+The summary also gives a nugget score, the way FreshStack scores answers: per question the share of its nuggets that the answer states, averaged over the questions. The strict score counts only `full`, the lenient one counts `partial` for half.
 
 Answers with an outcome other than `answered` get no judge calls: their nuggets count as not in the answer, and they have no statements to check.
 
 ## Known limits
 
-- The judge is the same model as the assistant (Claude Sonnet 5.5), so it may be lenient on its own answers. A hand check of a sample of answers is the counterweight.
+- The judge is the same model as the assistant (Claude Sonnet 5.5). Its verdicts on the dev split were re-read by a second Claude pass, not by a person: `full` and `none` held up, `partial` was a bit strict, so the strict nugget score is a lower bound.
+- The list of claims without a source is noisy. Re-read on the dev split, about one in five flags was justified; most of the others were remarks about the user's own code or a conclusion one step from a backed fact. It is a list of places to look, not a count of made-up facts.
+- The judge only gets the documents whose ids the answer cites. In two test answers the assistant cited a document number instead of its id, so the judge had no document to check and graded all their statements `not_supported`.
 - The model has no temperature 0, so a rerun of the judge can give slightly different verdicts.
 - The labels of the test set are not complete: a document that supports a nugget but was never labelled counts as "not found".

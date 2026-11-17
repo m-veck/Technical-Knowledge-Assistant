@@ -41,7 +41,7 @@ def download_datasets() -> None:
 def download_database() -> None:
     """Download the prebuilt database from the GitHub Release into data/, so no one has to embed the corpus again."""
     if config.DB_PATH.exists():
-        raise SystemExit(f"{config.DB_PATH} already exists. Delete it first (`uv run tka setup --clean`) to download it again.")
+        raise SystemExit(f"{config.DB_PATH} already exists. Delete that file by hand to download it again.")
     config.DB_PATH.parent.mkdir(parents=True, exist_ok=True)
 
     # Download to a .part file and rename at the end, so a broken-off download never looks like a finished database
