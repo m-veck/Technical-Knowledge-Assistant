@@ -23,6 +23,9 @@ def load_questions(split: str) -> list[dict]:
                 "id": row["query_id"],
                 "text": f"{row['query_title']} {row['query_text']}",  # title + body, as FreshStack does
                 "nuggets": [set(nugget["relevant_corpus_ids"]) for nugget in row["nuggets"]],
+                # For the judge only; the assistant never sees these two
+                "nugget_texts": [nugget["text"] for nugget in row["nuggets"]],
+                "reference_answer": row["answer_text"],
             })
     return questions
 

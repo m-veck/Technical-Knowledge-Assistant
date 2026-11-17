@@ -83,6 +83,8 @@ WEIGHT_SEMANTIC = 0.7  # share of the semantic score in the fused score; keyword
 
 LLM_MODEL = "claude-sonnet-5-5"  # answering and judging; `--model` overrides it
 LLM_EFFORT = "medium"  # how deep Claude thinks before answering: low, medium or high
+LLM_PRICE_INPUT_PER_MILLION = 2.0  # USD per 1M input tokens of LLM_MODEL, only for the cost lines of the evaluation
+LLM_PRICE_OUTPUT_PER_MILLION = 10.0  # USD per 1M output tokens (thinking included)
 ANSWER_TOP_K = 10  # how many retrieved rows go to Claude
 ANSWER_MAX_TOKENS = 16_000  # ceiling for Claude's thinking plus answer in one call
 ANSWER_PROMPT_PATH = Path(__file__).parent / "prompts" / "answer-system-prompt.md"  # the system prompt, as plain text
