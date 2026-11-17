@@ -78,6 +78,16 @@ KEYWORD_CANDIDATES = 50  # results the keyword search delivers to the fusion
 WEIGHT_SEMANTIC = 0.7  # share of the semantic score in the fused score; keyword gets the rest (0.3)
 
 # =======================================================
+# Answer: the Claude call that writes the answer from the retrieved rows
+# =======================================================
+
+LLM_MODEL = "claude-sonnet-5-5"  # answering and judging; `--model` overrides it
+LLM_EFFORT = "medium"  # how deep Claude thinks before answering: low, medium or high
+ANSWER_TOP_K = 10  # how many retrieved rows go to Claude
+ANSWER_MAX_TOKENS = 16_000  # ceiling for Claude's thinking plus answer in one call
+ANSWER_PROMPT_PATH = Path(__file__).parent / "prompts" / "answer-system-prompt.md"  # the system prompt, as plain text
+
+# =======================================================
 # Split: dev and test part of the evaluation questions
 # =======================================================
 

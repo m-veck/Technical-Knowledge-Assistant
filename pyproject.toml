@@ -5,10 +5,12 @@ description = "Technical Knowledge Assistant: answers LangChain questions from t
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "anthropic>=2.9.0",
     "cohere>=7.3.1",
     "huggingface-hub>=2.4.0",
     "pyarrow>=26.0.1",
     "python-dotenv>=1.2.4",
+    "rich>=15.0.0",
     "sqlite-vec>=0.1.9",
     "typer>=0.29.1",
 ]

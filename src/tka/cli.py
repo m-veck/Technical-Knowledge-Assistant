@@ -6,6 +6,7 @@ from typing import Annotated
 import typer
 
 from tka import config
+from tka.ask import ask as ask_question
 from tka.database import delete_database, setup_database
 from tka.download import download_data
 from tka.evaluation import evaluate_retrieval
@@ -76,8 +77,21 @@ def search(
     mode: Annotated[Mode, typer.Option(help="keyword (BM25), semantic (vectors) or hybrid (both, fused).")] = Mode.hybrid,
     k: Annotated[int, typer.Option(help="How many results to show.")] = config.SEARCH_TOP_K,
 ) -> None:
-    """Search the index and show the top results (no answer yet, just the retrieved documents)."""
+    """Search the index and show the top results (the retrieved documents only; `ask` gives an answer)."""
     show_search(question, mode.value, k)
+
+
+@app.command()
+def ask(
+    question: Annotated[str | None, typer.Argument(help="The question. Leave it out to keep asking questions until `exit`.")] = None,
+    model: Annotated[str, typer.Option(help="The Claude model that writes the answer.")] = config.LLM_MODEL,
+    details: Annotated[bool, typer.Option("--details", help="Also show the statements behind the answer, each with its document ids.")] = False,
+) -> None:
+    """Answer a question from the corpus, with the documents each statement rests on.
+
+    Every question is answered on its own: follow-up questions do not work.
+    """
+    ask_question(question, model, details)
 
 
 @app.command()
