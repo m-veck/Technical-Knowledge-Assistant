@@ -108,12 +108,14 @@ RESULTS_DIR = ROOT / "results"
 # The embeddings of the questions, saved so a rerun of the evaluation does not embed them again
 QUESTION_CACHE_PATH = ROOT / "splits" / "question_cache.json"
 
-# Retrieval metrics, same depths and alpha as the FreshStack leaderboard
-EVAL_RECALL_K = 50  # also how many results are fetched per question
-EVAL_COVERAGE_K = 20
-EVAL_NDCG_K = 10
-EVAL_ALPHA = 0.5  # how much a repeat of an already covered nugget is discounted
+# Retrieval metrics. FreshStack (the makers of this dataset) score search with three numbers,
+# each over a fixed number of top results. We use the same three, so our numbers can be laid next to their leaderboard.
+EVAL_RECALL_K = 50  # Recall@50: share of the relevant documents found in the top 50 (also how many results are fetched)
+EVAL_COVERAGE_K = 20  # Coverage@20: share of the nuggets with a supporting document in the top 20
+EVAL_NDCG_K = 10  # alpha-nDCG@10: are the top 10 well ordered, with documents for different nuggets near the top
+EVAL_ALPHA = 0.5  # in alpha-nDCG: a second document for an already covered nugget counts for half
 
-# The judge (evaluation only): two Claude calls per answer, each with its own system prompt
+# The judge (evaluation only): two Claude calls per answer, each with its own system prompt.
+# Two separate calls, so one verdict cannot colour the other. Same model as the answers, for cost.
 JUDGE_NUGGETS_PROMPT_PATH = Path(__file__).parent / "prompts" / "judge-nuggets-prompt.md"  # is the answer complete and helpful?
 JUDGE_SUPPORT_PROMPT_PATH = Path(__file__).parent / "prompts" / "judge-support-prompt.md"  # do the cited documents back the answer?
