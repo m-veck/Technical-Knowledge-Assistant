@@ -9,7 +9,7 @@ import typer
 from tka import config
 from tka.ask import ask as ask_question
 from tka.database import delete_database, setup_database
-from tka.download import download_data
+from tka.download import download_database, download_datasets
 from tka.evaluation_answers import evaluate_answers
 from tka.evaluation_judge import evaluate_judge
 from tka.evaluation_retrieval import evaluate_retrieval
@@ -22,6 +22,10 @@ app = typer.Typer(no_args_is_help=True)
 # `tka evaluation` is a group: `tka evaluation retrieval`, `tka evaluation answers` and `tka evaluation judge`
 evaluation_app = typer.Typer(no_args_is_help=True, help="Measure the quality of the retrieval and of the answers.")
 app.add_typer(evaluation_app, name="evaluation")
+
+# `tka download` is a group: `tka download database` and `tka download datasets`
+download_app = typer.Typer(no_args_is_help=True, help="Download the prebuilt database or the FreshStack datasets.")
+app.add_typer(download_app, name="download")
 
 
 class Split(str, Enum):
@@ -44,10 +48,16 @@ def main() -> None:
     """Technical Knowledge Assistant: answers LangChain questions from the FreshStack corpus."""
 
 
-@app.command()
-def download() -> None:
-    """Download the LangChain corpus and queries into data/raw/."""
-    download_data()
+@download_app.command()
+def database() -> None:
+    """Download the prebuilt database (the full index, about 700 MB) into data/."""
+    download_database()
+
+
+@download_app.command()
+def datasets() -> None:
+    """Download the LangChain corpus and queries into data/raw/ (needed for the evaluation and to build the index yourself)."""
+    download_datasets()
 
 
 @app.command()

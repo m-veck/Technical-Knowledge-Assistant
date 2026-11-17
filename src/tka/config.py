@@ -50,6 +50,9 @@ QUERIES_ROWS = 203
 # SQLite database: corpus rows, BM25 index (FTS5) and vectors (sqlite-vec) in one file
 DB_PATH = DATA_DIR / "tka.db"
 
+# The prebuilt database (the full index), attached to a GitHub Release; fetched by `tka download database`
+DB_RELEASE_URL = "https://github.com/m-veck/Technical-Knowledge-Assistant/releases/download/index-2026-11-17/tka.db"
+
 # =======================================================
 # Index: cleaning the rows and embedding them
 # =======================================================

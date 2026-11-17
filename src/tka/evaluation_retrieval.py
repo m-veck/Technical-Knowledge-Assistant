@@ -72,7 +72,7 @@ def alpha_ndcg(ranked: list[str], nuggets: list[set[str]], k: int) -> float:
 def evaluate_retrieval(split: str, limit: int | None = None) -> None:
     """Run every question of the split through the three searches, print the averages and save all scores."""
     if not config.DB_PATH.exists():
-        raise SystemExit("No database yet: run `uv run tka setup` and `uv run tka index` first.")
+        raise SystemExit("No database yet: run `uv run tka download database` first (or build it yourself with `uv run tka setup` and `uv run tka index`).")
     # 1
     questions = load_questions(split)[:limit]
     vectors = question_vectors(questions)

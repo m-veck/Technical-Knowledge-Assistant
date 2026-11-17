@@ -59,7 +59,7 @@ def evaluate_answers(split: str, limit: int | None = None, resume: Path | None =
     `resume` is the file of an earlier run: its questions are skipped and the new answers are added to it.
     """
     if not config.DB_PATH.exists():
-        raise SystemExit("No database yet: run `uv run tka setup` and `uv run tka index` first.")
+        raise SystemExit("No database yet: run `uv run tka download database` first (or build it yourself with `uv run tka setup` and `uv run tka index`).")
 
     # 1. A new results file, or the one of an earlier run to continue
     results = {"split": split, "settings": current_settings(), "summary": {}, "answers": {}}

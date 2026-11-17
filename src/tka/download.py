@@ -1,5 +1,7 @@
-"""Download the LangChain subset of the FreshStack corpus and queries into data/raw/."""
+"""Downloads: the FreshStack corpus and queries from Hugging Face, and the prebuilt database from GitHub."""
 
+import shutil
+import urllib.request
 from pathlib import Path
 
 import pyarrow.parquet as pq
@@ -28,9 +30,24 @@ def check(name: str, path: Path, expected_rows: int) -> None:
     print(f"{name}: {rows:,} rows, {size_mb:.1f} MB ({status})")
 
 
-def download_data() -> None:
+def download_datasets() -> None:
     """Download the corpus and the queries, then check both."""
     corpus = fetch(config.CORPUS_DATASET, config.CORPUS_FILE, config.CORPUS_REVISION, config.CORPUS_DIR)
     queries = fetch(config.QUERIES_DATASET, config.QUERIES_FILE, config.QUERIES_REVISION, config.QUERIES_DIR)
     check("Corpus", corpus, config.CORPUS_ROWS)
     check("Queries", queries, config.QUERIES_ROWS)
+
+
+def download_database() -> None:
+    """Download the prebuilt database from the GitHub Release into data/, so no one has to embed the corpus again."""
+    if config.DB_PATH.exists():
+        raise SystemExit(f"{config.DB_PATH} already exists. Delete it first (`uv run tka setup --clean`) to download it again.")
+    config.DB_PATH.parent.mkdir(parents=True, exist_ok=True)
+
+    # Download to a .part file and rename at the end, so a broken-off download never looks like a finished database
+    part = config.DB_PATH.with_suffix(".part")
+    print("Downloading the database (about 700 MB), this can take a few minutes...")
+    with urllib.request.urlopen(config.DB_RELEASE_URL) as response, open(part, "wb") as file:
+        shutil.copyfileobj(response, file)
+    part.rename(config.DB_PATH)
+    print(f"Database ready: {config.DB_PATH} ({config.DB_PATH.stat().st_size / 1_000_000:.0f} MB)")

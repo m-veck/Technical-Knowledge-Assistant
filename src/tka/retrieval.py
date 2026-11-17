@@ -84,7 +84,7 @@ def search(conn: sqlite3.Connection, question: str, mode: str = "hybrid", k: int
 def show_search(question: str, mode: str, k: int) -> None:
     """Print the top results for a question, with their GitHub URL (for `tka search`)."""
     if not config.DB_PATH.exists():
-        raise SystemExit("No database yet: run `uv run tka setup` and `uv run tka index` first.")
+        raise SystemExit("No database yet: run `uv run tka download database` first (or build it yourself with `uv run tka setup` and `uv run tka index`).")
     conn = database.connect()
     results = search(conn, question, mode, k)
     print(f"{mode} search, top {len(results)}:")

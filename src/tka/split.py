@@ -14,7 +14,7 @@ def make_split() -> None:
         raise SystemExit(f"Split already exists: {config.SPLIT_PATH}. It is made once; delete the file by hand to redo it.")
     queries_file = config.QUERIES_DIR / config.QUERIES_FILE
     if not queries_file.exists():
-        raise SystemExit("Queries not downloaded yet: run `uv run tka download` first.")
+        raise SystemExit("Queries not downloaded yet: run `uv run tka download datasets` first.")
 
     # Only the ids are read: nothing else from the queries is needed or stored here
     query_ids = sorted(pq.read_table(queries_file, columns=["query_id"])["query_id"].to_pylist())

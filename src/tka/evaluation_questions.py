@@ -14,7 +14,10 @@ from tka.embedding import embed_query
 def load_questions(split: str) -> list[dict]:
     """The questions of one split: the text to search with, and per nugget the set of relevant document ids."""
     query_ids = set(json.loads(config.SPLIT_PATH.read_text())[split])
-    rows = pq.read_table(config.QUERIES_DIR / config.QUERIES_FILE).to_pylist()
+    queries_file = config.QUERIES_DIR / config.QUERIES_FILE
+    if not queries_file.exists():
+        raise SystemExit("Queries not downloaded yet: run `uv run tka download datasets` first.")
+    rows = pq.read_table(queries_file).to_pylist()
     questions = []
     # Alle dev ophalen uit data set, en dan de nuggets erbij zetten.
     for row in rows:

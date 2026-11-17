@@ -66,7 +66,7 @@ def answer_and_show(conn: sqlite3.Connection, question: str, model: str, details
 def ask(question: str | None, model: str, details: bool = False) -> None:
     """Answer one question, or keep asking for questions until `exit` (for `tka ask`)."""
     if not config.DB_PATH.exists():
-        raise SystemExit("No database yet: run `uv run tka setup` and `uv run tka index` first.")
+        raise SystemExit("No database yet: run `uv run tka download database` first (or build it yourself with `uv run tka setup` and `uv run tka index`).")
     conn = database.connect()
 
     if question:
