@@ -12,6 +12,7 @@ from tka.database import delete_database, setup_database
 from tka.download import download_database, download_datasets
 from tka.evaluation_answers import evaluate_answers
 from tka.evaluation_judge import evaluate_judge
+from tka.evaluation_report import build_report
 from tka.evaluation_retrieval import evaluate_retrieval
 from tka.ingest import build_index
 from tka.retrieval import show_search
@@ -149,3 +150,11 @@ def judge(
 ) -> None:
     """Judge saved answers with Claude: complete, helpful and backed by their sources? Saves to results/ (each one costs money)."""
     evaluate_judge(answers_file, limit, resume)
+
+
+@app.command()
+def report(
+    split: Annotated[Split, typer.Option(help="dev or test: the split whose saved runs go into the report.")] = Split.dev,
+) -> None:
+    """Make one HTML report of the saved evaluation runs of a split; writes reports/report-<split>.html (free, no API calls)."""
+    build_report(split.value)

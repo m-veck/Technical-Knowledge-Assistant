@@ -122,3 +122,7 @@ EVAL_ALPHA = 0.5  # in alpha-nDCG: a second document for an already covered nugg
 # Two separate calls, so one verdict cannot colour the other. Same model as the answers, for cost.
 JUDGE_NUGGETS_PROMPT_PATH = Path(__file__).parent / "prompts" / "judge-nuggets-prompt.md"  # is the answer complete and helpful?
 JUDGE_SUPPORT_PROMPT_PATH = Path(__file__).parent / "prompts" / "judge-support-prompt.md"  # do the cited documents back the answer?
+
+# `tka report`: the HTML page it fills with the numbers of a split, and the folder the reports go to
+REPORT_TEMPLATE_PATH = Path(__file__).parent / "templates" / "report.html"
+REPORTS_DIR = ROOT / "reports"
