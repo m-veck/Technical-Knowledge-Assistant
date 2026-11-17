@@ -30,13 +30,9 @@ def show_answer(result: dict, details: bool = False) -> None:
     # A line across the screen and a label, so the answer stands apart from the question
     console.rule(style="cyan")
     show_line("TKA answer:", "bold")
-    if result["refusal"] is not None:
-        show_line(f"Claude declined to answer: {result['refusal']}", "red")
-        return
     console.print(Markdown(result["answer"]))  # the answer is Markdown: code blocks get colours, `names` are highlighted
     if result["sources"]:
-        # On "not enough information" the marked documents are the ones Claude ruled out, not sources of an answer
-        show_line("\nDocuments looked at:" if result["insufficient_context"] else "\nSources:", "bold")
+        show_line("\nSources:", "bold")
         for source in result["sources"]:
             show_line(f"[{source['rank']}] {source['doc_id']}", "cyan")
             show_line(f"    {source['url']}", "dim")
@@ -46,12 +42,13 @@ def show_answer(result: dict, details: bool = False) -> None:
             show_line(f"- {citation['statement']}")
             for doc_id in citation["doc_ids"]:
                 show_line(f"    {doc_id}", "cyan")
-    if result["invalid_markers"]:
-        show_line(f"\nMarked in the answer but not a retrieved document (invalid): {result['invalid_markers']}", "red")
-    if result["invalid_citations"]:
-        show_line(f"\nCited but not retrieved (invalid): {result['invalid_citations']}", "red")
+    if result["violations"]:
+        show_line(f"\nChecks this answer did not pass: {', '.join(result['violations'])}", "red")
     usage = result["usage"]
-    show_line(f"\n[{result['model']}, {usage['input_tokens']:,} tokens in, {usage['output_tokens']:,} out, {result['seconds']} s]", "dim")
+    show_line(
+        f"\n[{result['outcome']} | {result['model']}, {usage['input_tokens']:,} tokens in, {usage['output_tokens']:,} out, {result['seconds']} s]",
+        "dim",
+    )
 
 
 def answer_and_show(conn: sqlite3.Connection, question: str, model: str, details: bool) -> None:

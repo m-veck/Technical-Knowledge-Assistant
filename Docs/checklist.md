@@ -7,10 +7,10 @@ What the final solution needs. The "Required" part comes straight from [assignme
 ### Assistant
 
 - [x] Loads the LangChain corpus (`freshstack/corpus-oct-2024`, subset `langchain`) and makes it searchable
-- [ ] Answers questions using retrieved information from the corpus only (no live web search)
-- [ ] Cites the supporting corpus chunks by document ID (the original `_id`)
-- [ ] Says clearly when the corpus does not contain enough information, instead of guessing
-- [ ] Interactive command-line interface for asking new questions
+- [x] Answers questions using retrieved information from the corpus only (no live web search)
+- [x] Cites the supporting corpus chunks by document ID (the original `_id`)
+- [x] Says clearly when the corpus does not contain enough information, instead of guessing
+- [x] Interactive command-line interface for asking new questions
 - [ ] Queries dataset is never input to the assistant (not in the index, the prompt or examples)
 
 ### Evaluation
@@ -46,8 +46,8 @@ Not literally in the assignment, but my own
 
 ### Answer step (version 1)
 
-- [ ] One retrieval followed by one LLM call; no agent loop, no tools
-- [ ] Answer as structured JSON: claims with the full corpus `_id` per claim, and an `insufficient_context` flag
+- [x] One retrieval followed by one LLM call; no agent loop, no tools
+- [x] Answer as structured JSON: the answer, the statements behind it with the full corpus `_id` per statement, and an `outcome` (answered, not in corpus, out of scope, about the assistant)
 - [ ] Retrieval result saved per question (question, document IDs, scores, rank)
 - [ ] Citation check in code: every cited `_id` must be in that question's retrieval result; the invalid-citation rate is reported
 - [ ] "Not enough information" base layers: retrieval cutoff before the LLM, system prompt rule, citation check after the answer
@@ -73,5 +73,5 @@ Not literally in the assignment, but my own
 - [ ] Setup takes a few commands: install, get the index, start the CLI
 - [ ] Works with sensible defaults; settings go through `.env` or flags and are documented
 - [ ] CLI has `--help` and the README shows a short usage example
-- [ ] Clear error messages for the common problems (missing API key, missing index)
+- [x] Clear error messages for the common problems (missing API key, missing index)
 - [ ] Documentation lives in the repo: README for setup, run, approach and results; `Docs/` for background
