@@ -11,6 +11,7 @@ from tka.ask import ask as ask_question
 from tka.database import delete_database, setup_database
 from tka.download import download_data
 from tka.evaluation_answers import evaluate_answers
+from tka.evaluation_judge import evaluate_judge
 from tka.evaluation_retrieval import evaluate_retrieval
 from tka.ingest import build_index
 from tka.retrieval import show_search
@@ -18,7 +19,7 @@ from tka.split import make_split
 
 app = typer.Typer(no_args_is_help=True)
 
-# `tka evaluation` is a group: `tka evaluation retrieval`, `tka evaluation answers`, and later `judge`
+# `tka evaluation` is a group: `tka evaluation retrieval`, `tka evaluation answers` and `tka evaluation judge`
 evaluation_app = typer.Typer(no_args_is_help=True, help="Measure the quality of the retrieval and of the answers.")
 app.add_typer(evaluation_app, name="evaluation")
 
@@ -128,3 +129,13 @@ def answers(
     """Answer the evaluation questions with the assistant and save every answer to results/ (each one costs money)."""
     confirm_test_split(split)
     evaluate_answers(split.value, limit, resume)
+
+
+@evaluation_app.command()
+def judge(
+    answers_file: Annotated[Path, typer.Argument(help="A file written by `tka evaluation answers`, for example results/answers-dev-....json.")],
+    limit: Annotated[int | None, typer.Option(help="Only the first N answers of the file (a trial run; it is saved too).")] = None,
+    resume: Annotated[Path | None, typer.Option(help="The results file of an earlier judge run: skip its questions and add the rest to it.")] = None,
+) -> None:
+    """Judge saved answers with Claude: complete, helpful and backed by their sources? Saves to results/ (each one costs money)."""
+    evaluate_judge(answers_file, limit, resume)

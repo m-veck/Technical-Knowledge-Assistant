@@ -113,3 +113,7 @@ EVAL_RECALL_K = 50  # also how many results are fetched per question
 EVAL_COVERAGE_K = 20
 EVAL_NDCG_K = 10
 EVAL_ALPHA = 0.5  # how much a repeat of an already covered nugget is discounted
+
+# The judge (evaluation only): two Claude calls per answer, each with its own system prompt
+JUDGE_NUGGETS_PROMPT_PATH = Path(__file__).parent / "prompts" / "judge-nuggets-prompt.md"  # is the answer complete and helpful?
+JUDGE_SUPPORT_PROMPT_PATH = Path(__file__).parent / "prompts" / "judge-support-prompt.md"  # do the cited documents back the answer?
