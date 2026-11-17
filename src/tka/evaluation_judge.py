@@ -133,14 +133,9 @@ def judge_call(prompt_path: Path, message: str, schema: dict, usage: dict) -> di
     )
     usage["input_tokens"] += response.usage.input_tokens
     usage["output_tokens"] += response.usage.output_tokens
+    if response.stop_reason != "end_turn":  # Claude refused or was cut off, so there is no complete JSON to read
+        raise SystemExit(f"\nThe judge's reply was not finished ({response.stop_reason}). The verdicts so far are saved: run the command again with --resume.")
     return json.loads(next(block.text for block in response.content if block.type == "text"))
-
-
-def bucket(retrieved: bool, verdict: str) -> str:
-    """Where a nugget ended up: found by the search or not, said by the answer (verdict `full`) or not."""
-    if retrieved:
-        return "retrieved_and_used" if verdict == "full" else "retrieved_not_used"
-    return "in_answer_without_labelled_document" if verdict == "full" else "not_retrieved"
 
 
 def judge_answer(conn: sqlite3.Connection, answer: dict, question: dict) -> dict:
@@ -166,7 +161,7 @@ def judge_answer(conn: sqlite3.Connection, answer: dict, question: dict) -> dict
 
     # Per nugget: the judge's verdict next to what the answer run knows from the official labels
     judged["nuggets"] = [
-        {"text": text, "retrieved": retrieved, "verdict": verdict["verdict"], "reason": verdict["reason"], "bucket": bucket(retrieved, verdict["verdict"])}
+        {"text": text, "retrieved": retrieved, "verdict": verdict["verdict"], "reason": verdict["reason"]}
         for text, retrieved, verdict in zip(question["nugget_texts"], answer["nuggets_retrieved"], nugget_verdicts)
     ]
     judged["usage"] = usage
@@ -179,6 +174,9 @@ def summarise(judged: dict) -> dict:
     entries = list(judged.values())
     nuggets = [nugget for entry in entries for nugget in entry["nuggets"]]
     statements = [statement for entry in entries for statement in entry["statements"]]
+    # The nugget score of one question: the share of its nuggets the answer states. `partial` counts for half in the lenient one.
+    strict = [sum(nugget["verdict"] == "full" for nugget in entry["nuggets"]) / len(entry["nuggets"]) for entry in entries]
+    lenient = [sum({"full": 1, "partial": 0.5, "none": 0}[nugget["verdict"]] for nugget in entry["nuggets"]) / len(entry["nuggets"]) for entry in entries]
     tokens_in = sum(entry["usage"]["input_tokens"] for entry in entries)
     tokens_out = sum(entry["usage"]["output_tokens"] for entry in entries)
     cost = (tokens_in * config.LLM_PRICE_INPUT_PER_MILLION + tokens_out * config.LLM_PRICE_OUTPUT_PER_MILLION) / 1_000_000
@@ -188,7 +186,8 @@ def summarise(judged: dict) -> dict:
         "helpful": dict(Counter(entry["helpful"] for entry in entries if entry["helpful"])),
         "nuggets": len(nuggets),
         "nugget_verdicts": dict(Counter(nugget["verdict"] for nugget in nuggets)),
-        "nugget_buckets": dict(Counter(nugget["bucket"] for nugget in nuggets)),
+        "nugget_score_strict": round(sum(strict) / len(entries), 3),  # averaged over the questions, the way FreshStack scores answers
+        "nugget_score_lenient": round(sum(lenient) / len(entries), 3),
         "statements": len(statements),
         "statement_verdicts": dict(Counter(statement["verdict"] for statement in statements)),
         "unsupported_claims": sum(len(entry["unsupported_claims"]) for entry in entries),
@@ -205,6 +204,8 @@ def evaluate_judge(answers_path: Path, limit: int | None = None, resume: Path | 
 
     `resume` is the file of an earlier judge run: its questions are skipped and the new verdicts are added to it.
     """
+    if not config.DB_PATH.exists():
+        raise SystemExit("No database yet: run `uv run tka download database` first (or build it yourself with `uv run tka setup` and `uv run tka index`).")
     answers = json.loads(answers_path.read_text(encoding="utf-8"))
     split = answers["split"]
 
