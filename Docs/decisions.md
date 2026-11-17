@@ -62,7 +62,3 @@ Versie 2 gebruikt de scores zelf. Elke lijst wordt geschaald naar 0 tot 1 en daa
 **Cache voor de vraagvectoren.** Tijdens het wachten op de eerste vectoren bij de retrieval-test dacht ik al: dit ga ik niet elke keer doen. Daarom worden de vectoren van alle evaluatievragen één keer opgeslagen. De antwoordrun gebruikt dezelfde cache.
 
 **De judge: twee Claude-calls per antwoord, simpel gehouden.** Call 1 kijkt per nugget of die in het antwoord staat (full, partial of none) en of het antwoord de vraagsteller helpt (yes, partly of no). Call 2 kijkt per statement of de geciteerde documenten het dekken (supported, partly of not_supported). Het zijn twee losse calls, zodat de ene score de andere niet kleurt. Een uitgebreidere versie heb ik er weer uitgehaald: ik moet hem kunnen begrijpen en uitleggen.
-
-## Te verbeteren
-
-**Geen cutoff.** Uiteindelijk heb ik geen cutoff gebouwd voor als de semantic search te laag scoort. Een vraag zonder goede match krijgt dus toch tien documenten en één betaalde call.

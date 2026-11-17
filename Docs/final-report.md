@@ -30,8 +30,8 @@ De testset van 135 vragen is één keer gedraaid, nadat alles vaststond. De 68 d
 
 **Het leuke**
 
-- **De antwoorden blijven bij hun bronnen.** 94% van de geciteerde statements wordt gedekt door het document. Van de 10 die de judge "niet gedekt" noemt, komen er 9 uit twee antwoorden die een documentnummer citeerden in plaats van een id, waardoor de judge geen tekst had om tegen te controleren. Nagelezen kloppen die 9 wel.
-- **Hij gokt niet.** 15 keer zei hij dat zijn documenten de vraag niet dekken. Nagelezen was dat 11 keer terecht, 2 keer verdedigbaar en 2 keer onterecht.
+- **De antwoorden blijven bij hun bronnen.** 94% van de geciteerde statements wordt gedekt door het document. Van de 10 die de judge "niet gedekt" noemt, komen er 9 uit twee antwoorden die een documentnummer citeerden in plaats van een id, waardoor de judge geen tekst had om tegen te controleren.
+- **Hij gokt niet.** 15 keer zei hij dat zijn documenten de vraag niet dekken, in plaats van zelf iets te verzinnen.
 - **109 van de 120 antwoorden (91%) helpen de vraagsteller geheel of deels.**
 - **Test en dev liggen dicht bij elkaar.** Geen enkel verschil is groter dan toeval, dus ik zie geen teken dat de afstelling op dev overfit is.
 - **Goedkoop en snel:** 6 dollarcent en 8 seconden per antwoord.
@@ -83,11 +83,11 @@ Eén goed en één slecht antwoord uit de testrun. De volledige tekst met alle o
 
 Ik vind het lastig. De vragen bevatten veel ruis, zoals errorberichten en code, die de search niet helpen. Ik heb één snel testje gedaan met een LLM-call die de noise eruit haalt en er nette vragen van maakt, maar die verbetering viel zwaar tegen: op dev bleef het aantal nuggets met een document in de top 10 hangen op 138 tot 142 van de 208, tegen 142 zonder die extra call.
 
-Het jammerst vind ik wel dat er vaak documenten met het antwoord in de top 10 staan, maar dat de AI die antwoorden niet eens gebruikt. Op test stond bij 243 nuggets een ondersteunend document in de top 10, en bij 65 daarvan (27%) staat de nugget niet in het antwoord. Daar hoort wel een kanttekening bij: bij het nalezen op dev bleek het document de nugget maar in 4 van de 51 van zulke gevallen letterlijk te bevatten. Het ligt dus deels aan de AI en deels aan de labels.
+Het jammerst vind ik wel dat er vaak documenten met het antwoord in de top 10 staan, maar dat de AI die antwoorden niet eens gebruikt. Op test stond bij 243 nuggets een ondersteunend document in de top 10, en bij 65 daarvan (27%) staat de nugget niet in het antwoord. Daar hoort wel een kanttekening bij: het label zegt dat een document relevant is voor de nugget, niet dat het feit er letterlijk in staat. Het ligt dus deels aan de AI en deels aan de labels.
 
 Semantic search en keyword werken uit mijn testen het beste in een fusion. Ik had ook het idee om eerst een semantic search te doen en dan op de top 200 een keyword boost te gooien. Dat heb ik op dev geprobeerd en het kwam op hetzelfde uit (alpha-nDCG@10 0,44 tegen 0,45), dus op deze dataset doet dat niet veel goeds. Voor algemeen gebruik is de fusion het beste.
 
-De meting van de LLM-judge vertrouw ik ook niet helemaal. Ik heb het idee dat er te veel kan schuiven door met de prompt te spelen en hem net wat makkelijker of moeilijker te maken. Bij het nalezen op dev was de judge inderdaad aan de strenge kant: van 15 oordelen "partial" waren er 4 tot 7 eigenlijk "full", en van de zinnen die hij aanmerkte als "zonder bron" was ongeveer één op de vijf terecht. De controle van de bronnen was wel betrouwbaar. Op zich is dat schuiven niet helemaal slecht, want daardoor zou ik hier nog wel iets mee kunnen doen, alleen is daar nu geen tijd meer voor.
+De meting van de LLM-judge vertrouw ik ook niet helemaal. Ik heb het idee dat er te veel kan schuiven door met de prompt te spelen en hem net wat makkelijker of moeilijker te maken. Op zich is dat schuiven niet helemaal slecht, want daardoor zou ik hier nog wel iets mee kunnen doen, alleen is daar nu geen tijd meer voor.
 
 ## 5. Wat ik zou verbeteren
 

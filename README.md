@@ -6,8 +6,6 @@ A command-line assistant that answers LangChain questions from the FreshStack La
 
 Built by Max van Eck as a technical case study. The assignment is in [Docs/assignment.md](Docs/assignment.md).
 
-<!-- 1. What is this: Max's own short story comes here -->
-
 ## How to start
 
 You need Python 3.13 and [uv](https://docs.astral.sh/uv/).
@@ -60,6 +58,9 @@ uv run tka ask
 
 # Also show the statements behind the answer, each with its document ids
 uv run tka ask "How do I add memory to a LangChain agent?" --details
+
+# Or ask something outside of the related libraries like:
+uv run tka ask "What is the meaning of life?" --details
 ```
 
 What you get back:
